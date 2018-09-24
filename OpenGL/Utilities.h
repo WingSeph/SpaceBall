@@ -16,12 +16,25 @@ enum InputState
 	INPUT_HOLD
 };
 
+enum InputMouse
+{
+	MOUSE_LEFT,
+	MOUSE_MIDDLE,
+	MOUSE_RIGHT
+};
+
 void Keyboard_Down(unsigned char key, int x, int y);
 
 void Keyboard_Up(unsigned char key, int x, int y);
 
-void GetDeltaPosition(b2Body* _body, float _fAngle);
+void Mouse(int _iButton, int _iGlutState, int _iX, int _iY);
 
-void GetDeltaPosition2(b2Body* _body);
+bool GetButtonDown(unsigned char _cKey);
+bool GetButtonUp(unsigned char _cKey);
+
+bool GetMouseButtonDown(int _iButton);
+bool GetMouseButtonUp(int _iButton);
 
 float GetDeltaRotation();
+
+void RotateVector(b2Vec2& _vector, float _fDeg);

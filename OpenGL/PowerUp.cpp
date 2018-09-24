@@ -16,8 +16,6 @@ void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 
 void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
-	float speed = 10.0f;
-	GetDeltaPosition(m_physicsBody, rotation);
 	location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
 
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
