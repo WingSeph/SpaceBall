@@ -61,7 +61,7 @@ void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 
 
 
-	std::cout << lifetimer << "\n";
+	//std::cout << lifetimer << "\n";
 	
 	
 	
