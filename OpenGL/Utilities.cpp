@@ -4,78 +4,52 @@
 #include "Dependencies/freeglut/freeglut.h"
 #include <math.h>
 
-unsigned char keyState[255];
+#include <iostream>
+
+unsigned char g_keyState[255];
+unsigned char g_mouseState[3];
 
 void Keyboard_Down(unsigned char key, int x, int y)
 {
-	keyState[key] = INPUT_HOLD;
+	g_keyState[key] = INPUT_HOLD;
 }
 
 void Keyboard_Up(unsigned char key, int x, int y)
 {
-	keyState[key] = INPUT_RELEASED;
+	g_keyState[key] = INPUT_RELEASED;
 }
 
-void GetDeltaPosition(b2Body* _body, float _fAngle)
+void Mouse(int _iButton, int _iGlutState, int _iX, int _iY)
 {
-	_body->SetLinearDamping(0.5f);
-	_body->SetAngularDamping(1.0f);
-
-	//'w' = Up
-	if (keyState[(unsigned char)'w'] == INPUT_HOLD)
+	if (_iButton < 3)
 	{
-		// Move forwards
-		//_body->ApplyForce(, true);
-	}
-	// 's' = Down
-	if (keyState[(unsigned char)'s'] == INPUT_HOLD)
-	{
-		// Move backwards
-		_body->ApplyForce(b2Vec2(cos(_body->GetAngle()), sin(-_body->GetAngle())), b2Vec2(_body->GetPosition().x, _body->GetPosition().y), true);
-	}
-
-	// 'a' = Left
-	if (keyState[(unsigned char)'a'] == INPUT_HOLD)
-	{
-		// Rotate left
-		_body->SetAngularVelocity(50);
-	}
-
-	// 'd' = Right
-	else if (keyState[(unsigned char)'d'] == INPUT_HOLD)
-	{
-		// Rotate right
-		_body->SetAngularVelocity(-50);
+		g_mouseState[_iButton] = (_iGlutState == GLUT_DOWN) ? INPUT_HOLD : INPUT_RELEASED;
 	}
 }
 
-void GetDeltaPosition2(b2Body* _body)
+bool GetButtonDown(unsigned char _cKey)
 {
-	//'i' = Up
-	if (keyState[(unsigned char)'i'] == INPUT_HOLD)
-	{
-		// Move forwards
-		_body->ApplyForce(b2Vec2(0, 1), b2Vec2(_body->GetPosition().x, _body->GetPosition().y + 1), true);
-	}
-	// 'k' = Down
-	if (keyState[(unsigned char)'k'] == INPUT_HOLD)
-	{
-		// Move backwards
-		_body->ApplyForce(b2Vec2(0, -1), b2Vec2(_body->GetPosition().x, _body->GetPosition().y - 1), true);
-	}
+	return (g_keyState[_cKey] == INPUT_HOLD) ? true : false;
+}
 
-	// 'j' = Left
-	if (keyState[(unsigned char)'j'] == INPUT_HOLD)
-	{
-		// Rotate left
-		
-	}
+bool GetButtonUp(unsigned char _cKey)
+{
+	return (g_keyState[_cKey] == INPUT_RELEASED) ? true : false;
+}
 
-	// 'l' = Right
-	if (keyState[(unsigned char)'l'] == INPUT_HOLD)
+bool GetMouseButtonDown(int _iButton)
+{
+	if (_iButton <= 3)
 	{
-		// Rotate right
-		
+		return (g_mouseState[_iButton] == INPUT_HOLD) ? true : false;
+	}
+}
+
+bool GetMouseButtonUp(int _iButton)
+{
+	if (_iButton <= 3)
+	{
+		return(g_mouseState[_iButton] == INPUT_RELEASED) ? true : false;
 	}
 }
 
@@ -83,12 +57,12 @@ float GetDeltaRotation()
 {
 	float deltaRotation = 0.0f;
 	//'a' = Left
-	if (keyState[(unsigned char)'a'] == INPUT_HOLD)
+	if (g_keyState[(unsigned char)'a'] == INPUT_HOLD)
 	{
 		deltaRotation += 1.0f;
 	}
 	//'d' = Right
-	if (keyState[(unsigned char)'d'] == INPUT_HOLD)
+	if (g_keyState[(unsigned char)'d'] == INPUT_HOLD)
 	{
 		deltaRotation -= 1.0f;
 	}
@@ -99,6 +73,15 @@ void ResetFalse()
 {
 	for (int i = 0; i < 255; i++)
 	{
-		keyState[i] = FALSE;
+		g_keyState[i] = FALSE;
 	}
+}
+
+void RotateVector(b2Vec2& _vector, float _fDeg)
+{
+	float pX = _vector.x * cosf(_fDeg / 180 * b2_pi) - _vector.y * sinf(_fDeg / 180 * b2_pi);
+	float pY = _vector.x * sinf(_fDeg / 180 * b2_pi) + _vector.y * cosf(_fDeg / 180 * b2_pi);
+
+	_vector.x = pX;
+	_vector.y = pY;
 }
