@@ -7,7 +7,6 @@
 #include "Background.h"
 #include "Player.h"
 #include "Player2.h"
-#include "PowerUp.h"
 
 Scene::Scene()
 {
@@ -39,8 +38,6 @@ Scene::Scene()
 		std::make_unique<Player>();
 	player2 =
 		std::make_unique<Player2>();
-	powerup =
-		std::make_unique<PowerUp>();
 
 	gameobjects =
 		std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
@@ -65,8 +62,6 @@ void Scene::Init()
 	player->Init("Resources/Textures/ship.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), shader, false, COLLIDER_CIRCLE, m_world);
 	player2->Init("Resources/Textures/ship.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), shader, false, COLLIDER_CIRCLE, m_world);
 
-	powerup->Init("Resources/Textures/ship.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), shader, false, COLLIDER_CIRCLE, m_world);
-
 	gameobjects->push_back(std::move(ball));
 	gameobjects->push_back(std::move(wallU));
 	gameobjects->push_back(std::move(wallD));
@@ -77,7 +72,6 @@ void Scene::Init()
 	//gameobjects->push_back(background);
 	gameobjects->push_back(std::move(player));
 	gameobjects->push_back(std::move(player2));
-	gameobjects->push_back(std::move(powerup));
 
 	m_world.SetDebugDraw(&m_debugDraw);
 	uint32 flags = 0;

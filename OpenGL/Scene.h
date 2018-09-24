@@ -34,8 +34,7 @@ private:
 		wallR,
 		goalL,
 		goalR,
-		background,
-		powerup;
+		background;
 
 	std::unique_ptr<std::vector<std::unique_ptr<Pawn>>>
 		gameobjects;

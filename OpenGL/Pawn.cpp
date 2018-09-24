@@ -60,7 +60,7 @@ void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 {
 	rotation = m_physicsBody->GetAngle();
 	location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
-
+	//scale = 
 	mesh->Update
 	(
 		t_projection,
