@@ -25,5 +25,5 @@ void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 
 void PowerUp::Render()
 {
-	Pawn::Render();
+	Pawn::Render();//hi
 }
