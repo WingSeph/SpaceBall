@@ -7,6 +7,9 @@
 #include "Background.h"
 #include "Player.h"
 #include "Player2.h"
+#include "ContactListener.h"
+
+MyContactListener g_myContactListenerInstance;
 
 Scene::Scene()
 {
@@ -49,6 +52,8 @@ Scene::~Scene()
 
 void Scene::Init()
 {
+	m_world.SetContactListener(&g_myContactListenerInstance);
+
 	ball->Init("Resources/Textures/ball.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), shader, false, COLLIDER_CIRCLE, m_world);
 
 	wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), shader, true, COLLIDER_SQUARE, m_world);

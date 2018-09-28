@@ -71,3 +71,8 @@ void Player::MovementChecker()
 		m_physicsBody->SetAngularVelocity(-100);
 	}
 }
+
+void Player::OnCollisionEnter(Pawn* _other)
+{
+
+}

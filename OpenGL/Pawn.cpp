@@ -108,3 +108,13 @@ b2Body* Pawn::GetBody()
 {
 	return(m_physicsBody);
 }
+
+void Pawn::OnCollisionEnter(Pawn* _other)
+{
+
+}
+
+bool Pawn::IsDead()
+{
+	return(m_bIsDead);
+}

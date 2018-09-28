@@ -34,6 +34,13 @@ public:
 
 	b2Body* GetBody();
 
+	void startContact() { m_bIsContacting = true; }
+	void endContact() { m_bIsContacting = false; }
+
+	virtual void OnCollisionEnter(Pawn* _other);
+
+	bool IsDead();
+
 protected:
 	std::unique_ptr<Mesh>
 		mesh;
@@ -54,4 +61,7 @@ protected:
 	b2Body* m_physicsBody;
 
 	EColliderShape m_colliderShape;
+
+	bool m_bIsContacting = false;
+	bool m_bIsDead = false;
 };
