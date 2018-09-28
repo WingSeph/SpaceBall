@@ -144,6 +144,7 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ContactListener.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Goal.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ContactListener.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="glext.h" />
