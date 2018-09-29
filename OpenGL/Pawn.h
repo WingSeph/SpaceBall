@@ -41,6 +41,9 @@ public:
 
 	bool IsDead();
 
+	std::string GetTag() { return m_sTag; }
+	void SetTag(std::string _sTag) { m_sTag = _sTag; }
+
 protected:
 	std::unique_ptr<Mesh> m_mesh;
 
@@ -60,4 +63,6 @@ protected:
 
 	bool m_bIsContacting = false;
 	bool m_bIsDead = false;
+	bool m_bCanRender = true;
+	std::string m_sTag;
 };
