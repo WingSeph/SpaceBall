@@ -1,5 +1,6 @@
 #pragma once
 #include "Pawn.h"
+#include "PlayerShield.h"
 
 class Player2 : public Pawn
 {
@@ -12,4 +13,7 @@ public:
 	virtual void OnCollisionEnter(Pawn* _other);
 
 	void MovementChecker();
+
+private:
+	CPlayerShield m_shield;
 };
