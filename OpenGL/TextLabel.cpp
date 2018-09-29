@@ -11,20 +11,18 @@
 #include FT_FREETYPE_H
 #include <iostream>
 
-TextLabel::TextLabel(std::string newText, std::string newFont, glm::vec2 pos)
+TextLabel::TextLabel(std::string _sNewText, std::string _sNewFont, glm::vec2 _pos, glm::vec3 _color)
 {
 	static ShaderLoader shaderLoader;
-	text = newText;
-	color = glm::vec3(0, 0, 0);
-	scale = 1.0;
-	SetPosition(pos);
-	program = shaderLoader.CreateProgram("Resources/Shaders/Text.vs",
-		"Resources/Shaders/Text.fs");
+	m_sText = _sNewText;
+	m_color = _color;
+	m_scale = 1.0;
+	SetPosition(_pos);
+	m_program = shaderLoader.CreateProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs");
 	glm::mat4 proj = glm::ortho(0.0f, (GLfloat)WINDOW_WIDTH, 0.0f, (GLfloat)WINDOW_HEIGHT);
 
-	glUseProgram(program);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE,
-		glm::value_ptr(proj));
+	glUseProgram(m_program);
+	glUniformMatrix4fv(glGetUniformLocation(m_program, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
 
 	// Initiate the font Lib
 	FT_Library ft;
@@ -35,7 +33,7 @@ TextLabel::TextLabel(std::string newText, std::string newFont, glm::vec2 pos)
 	// Each character is called a glyph and Face is the collection of glyphs
 	FT_Face face;
 	// Load font as face;
-	if (FT_New_Face(ft, newFont.c_str(), 0, &face))
+	if (FT_New_Face(ft, _sNewFont.c_str(), 0, &face))
 	{
 		std::cout << "ERROR::FREETYPE: Failed to Load font" << std::endl;
 	}
@@ -70,7 +68,7 @@ TextLabel::TextLabel(std::string newText, std::string newFont, glm::vec2 pos)
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 			static_cast<GLuint>(face->glyph->advance.x)
 		};
-		Characters.insert(std::pair<GLchar, Character>(c, character));
+		m_characters.insert(std::pair<GLchar, Character>(c, character));
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -79,11 +77,11 @@ TextLabel::TextLabel(std::string newText, std::string newFont, glm::vec2 pos)
 	FT_Done_FreeType(ft);
 
 	//Configure VAO/VBO for texture quads
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	glGenVertexArrays(1, &m_VAO);
+	glBindVertexArray(m_VAO);
 
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glGenBuffers(1, &m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -93,14 +91,14 @@ TextLabel::TextLabel(std::string newText, std::string newFont, glm::vec2 pos)
 	glBindVertexArray(0);
 }
 
-void TextLabel::Update(std::string _text)
+void TextLabel::Update(std::string _sText)
 {
-	text = _text;
+	m_sText = _sText;
 }
 
 void TextLabel::Render()
 {
-	glm::vec2 textPos = position;
+	glm::vec2 textPos = m_position;
 
 	// Enable blending
 	glEnable(GL_CULL_FACE);
@@ -108,37 +106,37 @@ void TextLabel::Render()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Activate corresponding render state
-	glUseProgram(program);
-	glUniform3f(glGetUniformLocation(program, "textColor"), color.x, color.y, color.z);
+	glUseProgram(m_program);
+	glUniform3f(glGetUniformLocation(m_program, "textColor"), m_color.x, m_color.y, m_color.z);
 	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(VAO);
+	glBindVertexArray(m_VAO);
 
 	// Iterate through the Characters
-	for (std::string::const_iterator c = text.begin(); c != text.end(); c++)
+	for (std::string::const_iterator c = m_sText.begin(); c != m_sText.end(); c++)
 	{
-		Character ch = Characters[*c];
+		Character ch = m_characters[*c];
 
-		GLfloat xpos = textPos.x + ch.Bearing.x * scale;
-		GLfloat ypos = textPos.y - (ch.Size.y - ch.Bearing.y) * scale;
+		GLfloat xpos = textPos.x + ch.Bearing.x * m_scale;
+		GLfloat ypos = textPos.y - (ch.Size.y - ch.Bearing.y) * m_scale;
 
-		GLfloat w = ch.Size.x * scale;
-		GLfloat h = ch.Size.y * scale;
+		GLfloat w = ch.Size.x * m_scale;
+		GLfloat h = ch.Size.y * m_scale;
 
 		// Update(float _deltaTime) VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos + h, 1.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },
-		{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },{ xpos, ypos, 0.0, 1.0 },
+			{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },{ xpos, ypos, 0.0, 1.0 },
 		};
 
 		// Render the glyph texture over the quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// Now advance cursors for the next glyph
-		textPos.x += (ch.Advance >> 6) * scale;
+		textPos.x += (ch.Advance >> 6) * m_scale;
 	}
 
 	glBindVertexArray(0);

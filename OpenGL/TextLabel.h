@@ -18,21 +18,21 @@ struct Character
 
 class TextLabel {
 public:
-	TextLabel(std::string text, std::string font, glm::vec2 pos);
+	TextLabel(std::string _sText, std::string _sFont, glm::vec2 _pos, glm::vec3 _color);
 	~TextLabel() {};
-	void Update(std::string _text);
+	void Update(std::string _sText);
 	void Render();
-	void SetText(std::string newText) { text = newText; };
-	void SetColor(glm::vec3 newColor) { color = newColor; };
-	void SetScale(GLfloat newScale) { scale = newScale; };
-	void SetPosition(glm::vec2 newPosition) { position = newPosition; };
+	void SetText(std::string newText) { m_sText = newText; };
+	void SetColor(glm::vec3 newColor) { m_color = newColor; };
+	void SetScale(GLfloat newScale) { m_scale = newScale; };
+	void SetPosition(glm::vec2 newPosition) { m_position = newPosition; };
 
 private:
-	std::string text;
-	GLfloat scale;
-	glm::vec3 color;
-	glm::vec2 position;
-	GLuint VAO, VBO, program;
-	std::map<GLchar, Character> Characters;
-	static ShaderLoader shaderLoader;
+	std::string m_sText;
+	GLfloat m_scale;
+	glm::vec3 m_color;
+	glm::vec2 m_position;
+	GLuint m_VAO, m_VBO, m_program;
+	std::map<GLchar, Character> m_characters;
+	static ShaderLoader m_shaderLoader;
 };

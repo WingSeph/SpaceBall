@@ -157,6 +157,7 @@
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player2.cpp" />
+    <ClCompile Include="PlayerShield.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Player2.h" />
+    <ClInclude Include="PlayerShield.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderLoader.h" />

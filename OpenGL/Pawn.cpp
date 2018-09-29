@@ -51,24 +51,24 @@ void Pawn::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 
 	m_physicsBody->SetFixedRotation(true);
 
-	location = t_position;
-	rotation = t_rotation;
-	scale = t_scale;
+	m_location = t_position;
+	m_fRotation = t_rotation;
+	m_scale = t_scale;
 }
 
 void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
-	rotation = m_physicsBody->GetAngle();
-	location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
+	m_fRotation = m_physicsBody->GetAngle();
+	m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
 	//scale = 
-	mesh->Update
+	m_mesh->Update
 	(
 		t_projection,
 		t_view,
 		(
-			glm::translate(glm::mat4(), location) *
-			glm::rotate(glm::mat4(), glm::radians(rotation), glm::vec3(0, 0, 1)) *
-			glm::scale(glm::mat4(), scale)
+			glm::translate(glm::mat4(), m_location) *
+			glm::rotate(glm::mat4(), glm::radians(m_fRotation), glm::vec3(0, 0, 1)) *
+			glm::scale(glm::mat4(), m_scale)
 			),
 		t_cameraPos
 	);
@@ -76,17 +76,17 @@ void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 
 void Pawn::Render()
 {
-	mesh->Render();
+	m_mesh->Render();
 }
 
 void Pawn::applyForce(glm::vec3 force)
 {
-	acceleration += force;
+	m_acceleration += force;
 }
 
 void Pawn::seek(glm::vec3 target)
 {
-	applyForce(limit((glm::normalize(target - location) * maxspeed) - velocity, maxforce));
+	applyForce(limit((glm::normalize(target - m_location) * m_maxspeed) - m_velocity, m_maxforce));
 }
 
 glm::vec3 Pawn::limit(glm::vec3 vec, float max)
