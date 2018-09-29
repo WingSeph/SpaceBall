@@ -76,7 +76,16 @@ void Player2::MovementChecker()
 	m_shield.SetLocation(m_location);
 }
 
+void Player2::Die()
+{
+	m_bIsDead = true;
+	// Reduce score of player;
+}
+
 void Player2::OnCollisionEnter(Pawn* _other)
 {
-
+	if (_other->GetTag() == "Wall")
+	{
+		Die();
+	}
 }

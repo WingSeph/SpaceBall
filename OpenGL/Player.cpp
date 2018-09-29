@@ -1,4 +1,8 @@
 #pragma once
+
+#include <ctime>
+#include <cstdlib>
+
 #include "Player.h"
 #include "MeshCube.h"
 #include "Utilities.h"
@@ -29,7 +33,6 @@ void Player::Render()
 {
 	Pawn::Render();
 }
-
 
 void Player::MovementChecker()
 {
@@ -71,7 +74,16 @@ void Player::MovementChecker()
 	}
 }
 
+void Player::Die()
+{
+	m_bCanRender = false;
+	// Reduce score of player;
+}
+
 void Player::OnCollisionEnter(Pawn* _other)
 {
-
+	if (_other->GetTag() == "Wall")
+	{
+		Die();
+	}
 }

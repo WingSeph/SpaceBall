@@ -21,12 +21,21 @@ Scene::Scene()
 	m_player2Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(20, WINDOW_HEIGHT - 50), glm::vec3(1, 0, 0));
 
 	m_ball = std::make_unique<Ball>();
+
 	m_wallU = std::make_unique<Wall>();
+
 	m_wallD = std::make_unique<Wall>();
+
 	m_wallL = std::make_unique<Wall>();
+
 	m_wallR = std::make_unique<Wall>();
+
 	m_goalL = std::make_unique<Goal>();
+	m_goalL->SetTag("Goal");
+
 	m_goalR = std::make_unique<Goal>();
+	m_wallU->SetTag("Goal");
+
 	//m_background = std::make_shared<Background>();
 	m_player = std::make_unique<Player>();
 	m_player2 = std::make_unique<Player2>();
@@ -121,4 +130,17 @@ void Scene::Render()
 	m_timer->Render();
 	m_player1Score->Render();
 	m_player2Score->Render();
+}
+
+void Scene::DeletionCheck()
+{
+	if (m_player != nullptr && m_player->IsDead())
+	{
+		m_player = nullptr;
+	}
+
+	if (m_player != nullptr && m_player2->IsDead())
+	{
+		m_player2 = nullptr;
+	}
 }

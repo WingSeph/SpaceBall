@@ -12,6 +12,7 @@ void CPlayerShield::Init(std::string _filepath, glm::vec3 _position, float _rota
 {
 	m_mesh = std::make_unique<MeshCube>(_filepath, _shader);
 	Pawn::Init(_filepath, _position, _rotation, _scale, _shader, _isFixed, _colliderShape, _world);
+	m_sTag = "Shield";
 }
 
 void CPlayerShield::Update(float _deltaTime, glm::mat4 _view, glm::mat4 _projection, glm::vec3 _cameraPos)

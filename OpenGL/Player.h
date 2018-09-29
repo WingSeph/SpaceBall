@@ -14,6 +14,8 @@ public:
 
 	void MovementChecker();
 
+	void Die();
+
 private:
 	CPlayerShield m_shield;
 };
