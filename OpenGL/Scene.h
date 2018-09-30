@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Pawn.h"
 #include "Player.h"
+#include "Player2.h"
 #include "TextLabel.h"
 
 class Scene
@@ -27,10 +28,10 @@ private:
 	std::unique_ptr<Camera> m_camera;
 
 	std::unique_ptr<Player> m_player;
+	std::unique_ptr<Player2> m_player2;
 
 	std::unique_ptr<Pawn>
 		m_ball,
-		m_player2,
 		m_bgm,
 		m_wallU,
 		m_wallD,

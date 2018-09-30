@@ -6,7 +6,6 @@
 #include "Goal.h"
 #include "Background.h"
 
-#include "Player2.h"
 #include "ContactListener.h"
 #include "Dependencies/FMOD/fmod.hpp"
 
@@ -89,8 +88,8 @@ void Scene::Init()
 	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
-	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
-	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
+	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
 	m_world.SetContactListener(&g_myContactListenerInstance);
 	m_bgm->Init("Resources/Textures/Background.bmp", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), m_shader, true, COLLIDER_CIRCLE, m_world);
 	m_bgm->GetBody()->SetActive(false);
