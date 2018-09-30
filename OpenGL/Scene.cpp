@@ -59,6 +59,7 @@ Scene::Scene()
 		std::make_unique<PowerUp>();
 
 	//m_background = std::make_shared<Background>();
+	m_bgm = std::make_unique<Background>();
 	m_player = std::make_unique<Player>();
 	m_player2 = std::make_unique<Player2>();
 
@@ -78,9 +79,8 @@ void Scene::Init()
 	// Creating groundbody
 	b2BodyDef bd;
 	m_worldbody = m_world.CreateBody(&bd);
-	m_world.SetContactListener(&g_myContactListenerInstance);
-
-	m_ball->Init("Resources/Textures/ball.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
+	
+	m_ball->Init("Resources/Textures/meteor.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
 	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 0, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
@@ -93,9 +93,13 @@ void Scene::Init()
 	m_powerup->Init("Resources/Textures/ship.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
 
 	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
-	m_player->Init("Resources/Textures/ship.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
-	m_player2->Init("Resources/Textures/ship.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_world.SetContactListener(&g_myContactListenerInstance);
+	m_bgm->Init("Resources/Textures/Background.bmp", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), m_shader, true, COLLIDER_CIRCLE, m_world);
+	m_bgm->GetBody()->SetActive(false);
 
+	//m_gameobjects->push_back(std::move(m_bgm));
 	m_gameobjects->push_back(std::move(m_ball));
 	m_gameobjects->push_back(std::move(m_wallU));
 	m_gameobjects->push_back(std::move(m_wallD));
@@ -171,7 +175,7 @@ void Scene::Render()
 	/***ONLY FOR DEBUG****/
 	//m_world.DrawDebugData();
 	/***ONLY FOR DEBUG****/
-
+	m_bgm->Render();
 	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)
