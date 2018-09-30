@@ -49,6 +49,9 @@ Scene::~Scene()
 
 void Scene::Init()
 {
+	// Creating groundbody
+	b2BodyDef bd;
+	m_worldbody = m_world.CreateBody(&bd);
 	m_world.SetContactListener(&g_myContactListenerInstance);
 
 	m_ball->Init("Resources/Textures/ball.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
