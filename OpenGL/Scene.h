@@ -7,6 +7,7 @@
 #include "Pawn.h"
 #include "Player.h"
 #include "TextLabel.h"
+#include "PowerUp.h"
 
 class Scene
 {
@@ -19,6 +20,9 @@ public:
 	virtual void Render();
 
 	void DeletionCheck();
+
+	b2AABB GetBodyAABB(const b2Body* body);
+	bool IsOverlap(const b2World* world, const b2Body* body);
 
 private:
 	ShaderLoader m_shaderloader;
@@ -37,7 +41,8 @@ private:
 		m_wallR,
 		m_goalL,
 		m_goalR,
-		m_background;
+		m_background,
+		m_powerup;
 
 	std::unique_ptr<std::vector<std::unique_ptr<Pawn>>> m_gameobjects;
 

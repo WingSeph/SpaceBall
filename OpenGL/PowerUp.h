@@ -1,7 +1,6 @@
 #pragma once
 #include "Pawn.h"
-class PowerUp :
-	public Pawn
+class PowerUp : public Pawn
 {
 public:
 	PowerUp();
@@ -12,6 +11,8 @@ public:
 
 protected:
 	float lifespan;
-	glm::vec2 spawnpoint;
+	float lifetimer;
+	bool isactive;
 
+	glm::vec2 spawnpoint;
 };

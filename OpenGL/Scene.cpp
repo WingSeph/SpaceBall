@@ -10,8 +10,8 @@
 #include "ContactListener.h"
 #include "Dependencies/FMOD/fmod.hpp"
 
-FMOD::System* audioMgr; 
-FMOD::Sound* fxThump; 
+FMOD::System* audioMgr;
+FMOD::Sound* fxThump;
 FMOD::Sound* fxrespawn;
 FMOD::Sound* bgmTheme;
 
@@ -22,7 +22,7 @@ bool InitFmod() {
 const bool LoadAudio() {
 	FMOD_RESULT result;
 	result = audioMgr->createSound("Resources/Sounds/SFX/WARP.wav", FMOD_DEFAULT, 0, &fxrespawn);
-	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump); 
+	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump);
 	result = audioMgr->createSound("Resources/Sounds/Music/BGM.wav", FMOD_DEFAULT, 0, &bgmTheme);
 	bgmTheme->setMode(FMOD_LOOP_NORMAL);
 	return true;
@@ -35,7 +35,7 @@ Scene::Scene()
 	m_shader = m_shaderloader.CreateProgram("Resources/Shaders/3D.vs", "Resources/Shaders/3D.fs");
 	m_camera = std::make_unique<Camera>();
 
-	m_timer = std::make_unique<TextLabel>("Timer", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT - 50), glm::vec3(0,0,0));
+	m_timer = std::make_unique<TextLabel>("Timer", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50), glm::vec3(0, 0, 0));
 	m_player1Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50), glm::vec3(0, 1, 0));
 	m_player2Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(20, WINDOW_HEIGHT - 50), glm::vec3(1, 0, 0));
 
@@ -55,13 +55,14 @@ Scene::Scene()
 	m_goalR = std::make_unique<Goal>();
 	m_wallU->SetTag("Goal");
 
+	m_powerup =
+		std::make_unique<PowerUp>();
+
 	//m_background = std::make_shared<Background>();
 	m_player = std::make_unique<Player>();
 	m_player2 = std::make_unique<Player2>();
 
 	m_gameobjects = std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
-
-
 }
 
 Scene::~Scene()
@@ -70,9 +71,8 @@ Scene::~Scene()
 
 void Scene::Init()
 {
-
 	InitFmod(); LoadAudio();
-	FMOD::Channel* channel; 
+	FMOD::Channel* channel;
 	audioMgr->playSound(bgmTheme, 0, false, &channel);
 
 	// Creating groundbody
@@ -89,6 +89,9 @@ void Scene::Init()
 
 	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+
+	m_powerup->Init("Resources/Textures/ship.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+
 	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
 	m_player->Init("Resources/Textures/ship.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
 	m_player2->Init("Resources/Textures/ship.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
@@ -100,6 +103,8 @@ void Scene::Init()
 	m_gameobjects->push_back(std::move(m_wallR));
 	m_gameobjects->push_back(std::move(m_goalL));
 	m_gameobjects->push_back(std::move(m_goalR));
+	m_gameobjects->push_back(std::move(m_powerup));
+
 	//m_gameobjects->push_back(m_background);
 	/*m_gameobjects->push_back(std::move(m_player));
 	m_gameobjects->push_back(std::move(m_player2));*/
@@ -116,7 +121,6 @@ void Scene::Init()
 
 void Scene::Update()
 {
-	
 	//DeltaTime
 	if (m_firstrun == false)
 	{
@@ -126,17 +130,6 @@ void Scene::Update()
 	float currentTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
 	m_deltaTime = (currentTime - m_previousTime) * 0.001f;
 	m_previousTime = currentTime;
-
-	for (auto&& pawn : *m_gameobjects)
-	{
-		if (pawn)
-		{
-			pawn->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
-		}
-	}
-
-	m_player ->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
-	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 
 	m_gametimer -= m_deltaTime;
 	if (m_player1respawn > 0) {
@@ -156,9 +149,21 @@ void Scene::Update()
 	m_player2Score->Update("0");
 
 	m_timeStep = m_deltaTime;
+
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
 
 	DeletionCheck();
+
+	for (auto&& pawn : *m_gameobjects)
+	{
+		if (pawn)
+		{
+			pawn->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+		}
+	}
+
+	m_player->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 }
 
 void Scene::Render()
@@ -179,8 +184,6 @@ void Scene::Render()
 	m_timer->Render();
 	m_player1Score->Render();
 	m_player2Score->Render();
-
-	
 }
 
 void Scene::DeletionCheck()
@@ -197,4 +200,61 @@ void Scene::DeletionCheck()
 	{
 		m_player2 = nullptr;
 	}
+}
+
+/// Callback to check for overlap of given body.
+struct CheckOverlapCallback : b2QueryCallback
+{
+	CheckOverlapCallback(const b2Body* body) :
+		m_body(body), m_isOverlap(false) {}
+
+	// override
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		// Skip self.
+		if (fixture->GetBody() == m_body)
+			return true;
+
+		for (const b2Fixture* bodyFixture = m_body->GetFixtureList(); bodyFixture;
+			bodyFixture = bodyFixture->GetNext())
+		{
+			if (b2TestOverlap(fixture->GetShape(), 0, bodyFixture->GetShape(), 0,
+				fixture->GetBody()->GetTransform(), m_body->GetTransform()))
+			{
+				m_isOverlap = true;
+				return false;
+			}
+		}
+	}
+
+	const b2Body* m_body;
+	bool m_isOverlap;
+};
+
+/// Gets the combined AABB of all shapes of the given body.
+b2AABB Scene::GetBodyAABB(const b2Body* body)
+{
+	b2AABB result;
+	b2Transform trans = body->GetTransform();
+	const b2Fixture* first = body->GetFixtureList();
+
+	for (const b2Fixture* fixture = first; fixture; fixture = fixture->GetNext())
+	{
+		b2AABB aabb;
+		fixture->GetShape()->ComputeAABB(&aabb, trans, 0);
+		if (fixture == first)
+			result = aabb;
+		else
+			result.Combine(aabb);
+	}
+
+	return result;
+}
+
+/// Returns true if the given body overlaps any other body in the world.
+bool Scene::IsOverlap(const b2World* world, const b2Body* body)
+{
+	CheckOverlapCallback callback(body);
+	world->QueryAABB(&callback, GetBodyAABB(body));
+	return callback.m_isOverlap;
 }
