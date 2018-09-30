@@ -8,6 +8,23 @@
 #include "Player.h"
 #include "Player2.h"
 #include "ContactListener.h"
+#include "Dependencies/FMOD/fmod.hpp"
+
+FMOD::System* audioMgr; 
+//FMOD::Sound* fxThump; 
+FMOD::Sound* bgmTheme;
+
+bool InitFmod() {
+	FMOD_RESULT result; result = FMOD::System_Create(&audioMgr); if (result != FMOD_OK) { return false; }
+	result = audioMgr->init(50, FMOD_INIT_NORMAL, 0); if (result != FMOD_OK) { return false; } return true;
+}
+const bool LoadAudio() {
+	FMOD_RESULT result;
+	//result = audioMgr->createSound("Resources/Audio/Thump.wav", FMOD_DEFAULT, 0, &fxThump); 
+	result = audioMgr->createSound("Resources/Sounds/Music/BGM.wav", FMOD_DEFAULT, 0, &bgmTheme);
+	bgmTheme->setMode(FMOD_LOOP_NORMAL);
+	return true;
+}
 
 MyContactListener g_myContactListenerInstance;
 
@@ -41,6 +58,8 @@ Scene::Scene()
 	m_player2 = std::make_unique<Player2>();
 
 	m_gameobjects = std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
+
+
 }
 
 Scene::~Scene()
@@ -49,6 +68,11 @@ Scene::~Scene()
 
 void Scene::Init()
 {
+
+	InitFmod(); LoadAudio();
+	FMOD::Channel* channel; 
+	audioMgr->playSound(bgmTheme, 0, false, &channel);
+
 	// Creating groundbody
 	b2BodyDef bd;
 	m_worldbody = m_world.CreateBody(&bd);
