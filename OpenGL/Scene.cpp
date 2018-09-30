@@ -12,6 +12,7 @@
 
 FMOD::System* audioMgr; 
 FMOD::Sound* fxThump; 
+FMOD::Sound* fxrespawn;
 FMOD::Sound* bgmTheme;
 
 bool InitFmod() {
@@ -20,6 +21,7 @@ bool InitFmod() {
 }
 const bool LoadAudio() {
 	FMOD_RESULT result;
+	result = audioMgr->createSound("Resources/Sounds/SFX/WARP.wav", FMOD_DEFAULT, 0, &fxrespawn);
 	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump); 
 	result = audioMgr->createSound("Resources/Sounds/Music/BGM.wav", FMOD_DEFAULT, 0, &bgmTheme);
 	bgmTheme->setMode(FMOD_LOOP_NORMAL);
@@ -140,6 +142,8 @@ void Scene::Update()
 	if (m_player1respawn > 0) {
 		m_player1respawn -= m_deltaTime;
 		if (m_player1respawn <= 0) {
+			FMOD::Channel* channel;
+			audioMgr->playSound(fxrespawn, 0, false, &channel);
 			m_player->Respawn();
 		}
 	}
