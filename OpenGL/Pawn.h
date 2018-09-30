@@ -64,5 +64,6 @@ protected:
 	bool m_bIsContacting = false;
 	bool m_bIsDead = false;
 	bool m_bCanRender = true;
+	bool m_bIsFixed;
 	std::string m_sTag;
 };
