@@ -2,8 +2,6 @@
 #include "Pawn.h"
 #include "Dependencies/glm/gtc/matrix_transform.hpp"
 
-#include <iostream>
-
 Pawn::Pawn()
 {}
 
@@ -12,15 +10,11 @@ Pawn::~Pawn()
 
 void Pawn::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint & t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
 {
+	m_bIsFixed = t_isFixed;
+
 	b2BodyDef bd;
-	if (t_isFixed)
-	{
-		bd.type = b2_kinematicBody;
-	}
-	else
-	{
-		bd.type = b2_dynamicBody;
-	}
+
+	bd.type = b2_dynamicBody;
 
 	bd.position = b2Vec2(t_position.x, t_position.y);
 	m_physicsBody = t_world.CreateBody(&bd);
@@ -61,8 +55,16 @@ void Pawn::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 
 void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
-	m_fRotation = m_physicsBody->GetAngle();
-	m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
+	if (!m_bIsFixed)
+	{
+		m_fRotation = m_physicsBody->GetAngle();
+		m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
+	}
+	else
+	{
+		m_physicsBody->SetTransform(b2Vec2(m_location.x, m_location.y), m_fRotation);
+	}
+
 	//scale = 
 	m_mesh->Update
 	(
@@ -117,10 +119,7 @@ b2Body* Pawn::GetBody()
 
 void Pawn::OnCollisionEnter(Pawn* _other)
 {
-	/*if (_other->GetTag() == "Wall")
-	{
-		std::cout << "Collision hit" << std::endl;
-	}*/
+	
 }
 
 bool Pawn::IsDead()
