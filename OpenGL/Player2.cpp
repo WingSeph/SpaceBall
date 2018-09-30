@@ -9,11 +9,11 @@ Player2::Player2()
 Player2::~Player2()
 {}
 
-void Player2::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
+void Player2::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, b2World& t_world)
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
-	m_shield.Init("Resources/Textures/Player2Shield.png", t_position, t_rotation, t_scale, t_shader, t_isFixed, COLLIDER_CIRCLE, t_world);
-	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
+	m_shield.Init("Resources/Textures/Player2Shield.png", t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
+	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
 }
 
 void Player2::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
@@ -25,6 +25,11 @@ void Player2::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 	m_shield.Update(t_deltaTime, t_view, t_projection, t_cameraPos, m_fRotation);
 	
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
+
+	if (m_location.x <= 1.25f || m_location.x >= 18.76f || m_location.y >= 13.76f || m_location.y <= 1.25f)
+	{
+		Die();
+	}
 }
 
 void Player2::Render()
