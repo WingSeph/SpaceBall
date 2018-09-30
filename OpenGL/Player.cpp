@@ -7,6 +7,7 @@
 #include "MeshCube.h"
 #include "Utilities.h"
 
+
 Player::Player()
 {}
 
@@ -81,8 +82,19 @@ void Player::MovementChecker()
 
 void Player::Die()
 {
+	m_bIsDead = true;
 	m_bCanRender = false;
+	m_physicsBody->SetTransform(b2Vec2(6.0f,6.0f), m_physicsBody->GetAngle());
+	m_physicsBody->SetLinearVelocity(b2Vec2(0,0));
+	m_physicsBody->SetActive(false);
+
 	// Reduce score of player;
+}
+
+void Player::Respawn() {
+	m_bIsDead = false;
+	m_bCanRender = true;
+	m_physicsBody->SetActive(true);
 }
 
 void Player::OnCollisionEnter(Pawn* _other)

@@ -5,13 +5,13 @@
 #include "Wall.h"
 #include "Goal.h"
 #include "Background.h"
-#include "Player.h"
+
 #include "Player2.h"
 #include "ContactListener.h"
 #include "Dependencies/FMOD/fmod.hpp"
 
 FMOD::System* audioMgr; 
-//FMOD::Sound* fxThump; 
+FMOD::Sound* fxThump; 
 FMOD::Sound* bgmTheme;
 
 bool InitFmod() {
@@ -20,7 +20,7 @@ bool InitFmod() {
 }
 const bool LoadAudio() {
 	FMOD_RESULT result;
-	//result = audioMgr->createSound("Resources/Audio/Thump.wav", FMOD_DEFAULT, 0, &fxThump); 
+	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump); 
 	result = audioMgr->createSound("Resources/Sounds/Music/BGM.wav", FMOD_DEFAULT, 0, &bgmTheme);
 	bgmTheme->setMode(FMOD_LOOP_NORMAL);
 	return true;
@@ -99,8 +99,8 @@ void Scene::Init()
 	m_gameobjects->push_back(std::move(m_goalL));
 	m_gameobjects->push_back(std::move(m_goalR));
 	//m_gameobjects->push_back(m_background);
-	m_gameobjects->push_back(std::move(m_player));
-	m_gameobjects->push_back(std::move(m_player2));
+	/*m_gameobjects->push_back(std::move(m_player));
+	m_gameobjects->push_back(std::move(m_player2));*/
 
 	m_world.SetDebugDraw(&m_debugDraw);
 	uint32 flags = 0;
@@ -114,6 +114,7 @@ void Scene::Init()
 
 void Scene::Update()
 {
+	
 	//DeltaTime
 	if (m_firstrun == false)
 	{
@@ -132,13 +133,28 @@ void Scene::Update()
 		}
 	}
 
+	m_player ->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+
 	m_gametimer -= m_deltaTime;
+	if (m_player1respawn > 0) {
+		m_player1respawn -= m_deltaTime;
+		if (m_player1respawn <= 0) {
+			m_player->Respawn();
+		}
+	}
+	if (m_player2respawn > 0) {
+		m_player2respawn -= m_deltaTime;
+	}
+
 	m_timer->Update(std::to_string(static_cast<int>(m_gametimer)));
 	m_player1Score->Update("0");
 	m_player2Score->Update("0");
 
 	m_timeStep = m_deltaTime;
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
+
+	DeletionCheck();
 }
 
 void Scene::Render()
@@ -154,16 +170,23 @@ void Scene::Render()
 			pawn->Render();
 		}
 	}
+	m_player->Render();
+	m_player2->Render();
 	m_timer->Render();
 	m_player1Score->Render();
 	m_player2Score->Render();
+
+	
 }
 
 void Scene::DeletionCheck()
 {
-	if (m_player != nullptr && m_player->IsDead())
+	if (m_player != nullptr && m_player->IsDead() && m_player1respawn <= 0)
 	{
-		m_player = nullptr;
+		//m_player = nullptr;
+		FMOD::Channel* channel;
+		audioMgr->playSound(fxThump, 0, false, &channel);
+		m_player1respawn = 5;
 	}
 
 	if (m_player != nullptr && m_player2->IsDead())

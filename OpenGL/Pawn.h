@@ -41,6 +41,7 @@ public:
 
 	bool IsDead();
 
+
 	std::string GetTag() { return m_sTag; }
 	void SetTag(std::string _sTag) { m_sTag = _sTag; }
 

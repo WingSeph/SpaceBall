@@ -5,6 +5,7 @@
 #include "ShaderLoader.h"
 #include "Camera.h"
 #include "Pawn.h"
+#include "Player.h"
 #include "TextLabel.h"
 
 class Scene
@@ -25,9 +26,10 @@ private:
 
 	std::unique_ptr<Camera> m_camera;
 
+	std::unique_ptr<Player> m_player;
+
 	std::unique_ptr<Pawn>
 		m_ball,
-		m_player,
 		m_player2,
 		m_wallU,
 		m_wallD,
@@ -42,6 +44,8 @@ private:
 	std::unique_ptr<TextLabel> m_timer, m_player1Score, m_player2Score;
 
 	float m_gametimer = 60;
+	float m_player1respawn = 0;
+	float m_player2respawn = 0;
 	bool m_firstrun = false;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;

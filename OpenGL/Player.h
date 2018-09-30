@@ -11,7 +11,7 @@ public:
 	virtual void Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos);
 	virtual void Render();
 	void OnCollisionEnter(Pawn* _other);
-
+	void Respawn();
 	void MovementChecker();
 
 	void Die();
