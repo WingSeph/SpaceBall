@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Pawn.h"
 #include "Player.h"
+#include "Ball.h"
 #include "TextLabel.h"
 
 class Scene
@@ -28,8 +29,9 @@ private:
 
 	std::unique_ptr<Player> m_player;
 
+	std::unique_ptr<Ball> m_ball;
+
 	std::unique_ptr<Pawn>
-		m_ball,
 		m_player2,
 		m_bgm,
 		m_wallU,
@@ -50,6 +52,8 @@ private:
 	bool m_firstrun = false;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;
+	int player1score = 0;
+	int player2score = 0;
 
 	b2World m_world = b2World(b2Vec2(0, 0));
 	b2Body* m_worldbody;
