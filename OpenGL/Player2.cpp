@@ -22,7 +22,7 @@ void Player2::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 	MovementChecker();
 	m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
 
-	m_shield.Update(t_deltaTime, t_view, t_projection, t_cameraPos);
+	m_shield.Update(t_deltaTime, t_view, t_projection, t_cameraPos, m_fRotation);
 	
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
