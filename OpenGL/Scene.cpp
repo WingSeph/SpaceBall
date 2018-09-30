@@ -79,7 +79,7 @@ void Scene::Init()
 	// Creating groundbody
 	b2BodyDef bd;
 	m_worldbody = m_world.CreateBody(&bd);
-	
+
 	m_ball->Init("Resources/Textures/meteor.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
 	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
@@ -153,6 +153,12 @@ void Scene::Update()
 	m_player2Score->Update("0");
 
 	m_timeStep = m_deltaTime;
+
+	//powerup overlap check
+	//if (IsOverlap(m_powerup->GetBody()))
+	//{
+	//	m_powerup->OnCollisionEnter(m_player.get());
+	//}
 
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
 
@@ -256,9 +262,9 @@ b2AABB Scene::GetBodyAABB(const b2Body* body)
 }
 
 /// Returns true if the given body overlaps any other body in the world.
-bool Scene::IsOverlap(const b2World* world, const b2Body* body)
+bool Scene::IsOverlap(const b2Body* body)
 {
 	CheckOverlapCallback callback(body);
-	world->QueryAABB(&callback, GetBodyAABB(body));
+	m_world.QueryAABB(&callback, GetBodyAABB(body));
 	return callback.m_isOverlap;
 }

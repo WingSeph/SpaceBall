@@ -1,5 +1,5 @@
 #include "PowerUp.h"
-#include <iostream>
+//#include <iostream>
 
 PowerUp::PowerUp()
 {
@@ -26,8 +26,6 @@ void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 	lifetimer = isactive ? lifetimer -= t_deltaTime : lifetimer += t_deltaTime;
 	isactive = lifetimer <= 0 ? false : lifetimer > lifespan ? true : isactive;
 
-	std::cout << lifetimer << "\n";
-
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
@@ -37,4 +35,13 @@ void PowerUp::Render()
 	{
 		Pawn::Render();
 	}
+}
+
+void PowerUp::OnCollisionEnter(Pawn * _other)
+{
+	//powerup disappears
+	m_bIsDead = true;
+
+	//otherpawn gets powerup
+	_other->SetPowerUp(true, POWERUP1);
 }

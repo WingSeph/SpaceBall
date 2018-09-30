@@ -22,7 +22,7 @@ public:
 	void DeletionCheck();
 
 	b2AABB GetBodyAABB(const b2Body* body);
-	bool IsOverlap(const b2World* world, const b2Body* body);
+	bool IsOverlap(const b2Body* body);
 
 private:
 	ShaderLoader m_shaderloader;
