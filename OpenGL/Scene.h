@@ -47,6 +47,7 @@ private:
 	float m_previousTime = 0;
 
 	b2World m_world = b2World(b2Vec2(0, 0));
+	b2Body* m_worldbody;
 
 	float32 m_timeStep;
 	int32 m_velocityInterations = 10;

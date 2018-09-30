@@ -7,6 +7,8 @@
 #include "MeshCube.h"
 #include "Utilities.h"
 
+#include <iostream>
+
 Player::Player()
 {}
 
@@ -82,6 +84,8 @@ void Player::Die()
 
 void Player::OnCollisionEnter(Pawn* _other)
 {
+	//std::cout << "Collision hit" << std::endl;
+
 	if (_other->GetTag() == "Wall")
 	{
 		Die();

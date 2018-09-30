@@ -2,6 +2,8 @@
 #include "Pawn.h"
 #include "Dependencies/glm/gtc/matrix_transform.hpp"
 
+#include <iostream>
+
 Pawn::Pawn()
 {}
 
@@ -53,6 +55,8 @@ void Pawn::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 	m_fRotation = t_rotation;
 	m_scale = t_scale;
 	m_sTag = "";
+
+	m_physicsBody->SetUserData(this);
 }
 
 void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
@@ -113,7 +117,7 @@ b2Body* Pawn::GetBody()
 
 void Pawn::OnCollisionEnter(Pawn* _other)
 {
-
+	std::cout << "Collision hit" << std::endl;
 }
 
 bool Pawn::IsDead()
