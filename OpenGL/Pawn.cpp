@@ -117,7 +117,10 @@ b2Body* Pawn::GetBody()
 
 void Pawn::OnCollisionEnter(Pawn* _other)
 {
-	std::cout << "Collision hit" << std::endl;
+	/*if (_other->GetTag() == "Wall")
+	{
+		std::cout << "Collision hit" << std::endl;
+	}*/
 }
 
 bool Pawn::IsDead()

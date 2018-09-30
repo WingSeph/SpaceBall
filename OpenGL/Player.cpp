@@ -88,6 +88,7 @@ void Player::OnCollisionEnter(Pawn* _other)
 
 	if (_other->GetTag() == "Wall")
 	{
-		Die();
+		std::cout << "Collision hit" << std::endl;
+		//Die();
 	}
 }
