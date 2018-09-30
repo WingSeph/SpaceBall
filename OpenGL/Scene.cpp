@@ -5,45 +5,63 @@
 #include "Wall.h"
 #include "Goal.h"
 #include "Background.h"
-#include "Player.h"
+
 #include "Player2.h"
-#include "PowerUp.h"
+#include "ContactListener.h"
+#include "Dependencies/FMOD/fmod.hpp"
+
+FMOD::System* audioMgr; 
+FMOD::Sound* fxThump; 
+FMOD::Sound* fxrespawn;
+FMOD::Sound* bgmTheme;
+
+bool InitFmod() {
+	FMOD_RESULT result; result = FMOD::System_Create(&audioMgr); if (result != FMOD_OK) { return false; }
+	result = audioMgr->init(50, FMOD_INIT_NORMAL, 0); if (result != FMOD_OK) { return false; } return true;
+}
+const bool LoadAudio() {
+	FMOD_RESULT result;
+	result = audioMgr->createSound("Resources/Sounds/SFX/WARP.wav", FMOD_DEFAULT, 0, &fxrespawn);
+	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump); 
+	result = audioMgr->createSound("Resources/Sounds/Music/BGM.wav", FMOD_DEFAULT, 0, &bgmTheme);
+	bgmTheme->setMode(FMOD_LOOP_NORMAL);
+	return true;
+}
+
+MyContactListener g_myContactListenerInstance;
 
 Scene::Scene()
 {
-	shader =
-		shaderloader.CreateProgram("Resources/Shaders/3D.vs", "Resources/Shaders/3D.fs");
-	camera =
-		std::make_unique<Camera>();
+	m_shader = m_shaderloader.CreateProgram("Resources/Shaders/3D.vs", "Resources/Shaders/3D.fs");
+	m_camera = std::make_unique<Camera>();
 
-	label =
-		std::make_unique<TextLabel>("Player Score: " + std::to_string(gametimer), "Resources/Fonts/arial.ttf", glm::vec2(10, 15));
+	m_timer = std::make_unique<TextLabel>("Timer", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT - 50), glm::vec3(0,0,0));
+	m_player1Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50), glm::vec3(0, 1, 0));
+	m_player2Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(20, WINDOW_HEIGHT - 50), glm::vec3(1, 0, 0));
 
-	ball =
-		std::make_unique<Ball>();
-	wallU =
-		std::make_unique<Wall>();
-	wallD =
-		std::make_unique<Wall>();
-	wallL =
-		std::make_unique<Wall>();
-	wallR =
-		std::make_unique<Wall>();
-	goalL =
-		std::make_unique<Goal>();
-	goalR =
-		std::make_unique<Goal>();
-	//background =
-	//	std::make_shared<Background>();
-	player =
-		std::make_unique<Player>();
-	player2 =
-		std::make_unique<Player2>();
-	powerup =
-		std::make_unique<PowerUp>();
+	m_ball = std::make_unique<Ball>();
 
-	gameobjects =
-		std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
+	m_wallU = std::make_unique<Wall>();
+
+	m_wallD = std::make_unique<Wall>();
+
+	m_wallL = std::make_unique<Wall>();
+
+	m_wallR = std::make_unique<Wall>();
+
+	m_goalL = std::make_unique<Goal>();
+	m_goalL->SetTag("Goal");
+
+	m_goalR = std::make_unique<Goal>();
+	m_wallU->SetTag("Goal");
+
+	//m_background = std::make_shared<Background>();
+	m_player = std::make_unique<Player>();
+	m_player2 = std::make_unique<Player2>();
+
+	m_gameobjects = std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
+
+
 }
 
 Scene::~Scene()
@@ -52,32 +70,39 @@ Scene::~Scene()
 
 void Scene::Init()
 {
-	ball->Init("Resources/Textures/ball.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), shader, false, COLLIDER_CIRCLE, m_world);
 
-	wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), shader, true, COLLIDER_SQUARE, m_world);
-	wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 0, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), shader, true, COLLIDER_SQUARE, m_world);
-	wallL->Init("Resources/Textures/Wall.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), shader, true, COLLIDER_SQUARE, m_world);
-	wallR->Init("Resources/Textures/Wall.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), shader, true, COLLIDER_SQUARE, m_world);
+	InitFmod(); LoadAudio();
+	FMOD::Channel* channel; 
+	audioMgr->playSound(bgmTheme, 0, false, &channel);
 
-	goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), shader, true, COLLIDER_SQUARE, m_world);
-	goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), shader, true, COLLIDER_SQUARE, m_world);
-	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), shader, m_world);
-	player->Init("Resources/Textures/ship.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), shader, false, COLLIDER_CIRCLE, m_world);
-	player2->Init("Resources/Textures/ship.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), shader, false, COLLIDER_CIRCLE, m_world);
+	// Creating groundbody
+	b2BodyDef bd;
+	m_worldbody = m_world.CreateBody(&bd);
+	m_world.SetContactListener(&g_myContactListenerInstance);
 
-	powerup->Init("Resources/Textures/ship.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), shader, false, COLLIDER_CIRCLE, m_world);
+	m_ball->Init("Resources/Textures/ball.png", glm::vec3(5.0f, 5.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
-	gameobjects->push_back(std::move(ball));
-	gameobjects->push_back(std::move(wallU));
-	gameobjects->push_back(std::move(wallD));
-	gameobjects->push_back(std::move(wallL));
-	gameobjects->push_back(std::move(wallR));
-	gameobjects->push_back(std::move(goalL));
-	gameobjects->push_back(std::move(goalR));
-	//gameobjects->push_back(background);
-	gameobjects->push_back(std::move(player));
-	gameobjects->push_back(std::move(player2));
-	gameobjects->push_back(std::move(powerup));
+	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 0, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallL->Init("Resources/Textures/Wall.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallR->Init("Resources/Textures/Wall.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+
+	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
+	m_player->Init("Resources/Textures/ship.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_player2->Init("Resources/Textures/ship.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+
+	m_gameobjects->push_back(std::move(m_ball));
+	m_gameobjects->push_back(std::move(m_wallU));
+	m_gameobjects->push_back(std::move(m_wallD));
+	m_gameobjects->push_back(std::move(m_wallL));
+	m_gameobjects->push_back(std::move(m_wallR));
+	m_gameobjects->push_back(std::move(m_goalL));
+	m_gameobjects->push_back(std::move(m_goalR));
+	//m_gameobjects->push_back(m_background);
+	/*m_gameobjects->push_back(std::move(m_player));
+	m_gameobjects->push_back(std::move(m_player2));*/
 
 	m_world.SetDebugDraw(&m_debugDraw);
 	uint32 flags = 0;
@@ -91,30 +116,49 @@ void Scene::Init()
 
 void Scene::Update()
 {
+	
 	//DeltaTime
-	if (firstrun == false)
+	if (m_firstrun == false)
 	{
-		previousTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
-		firstrun = true;
+		m_previousTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
+		m_firstrun = true;
 	}
 	float currentTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
-	deltaTime = (currentTime - previousTime) * 0.001f;
-	previousTime = currentTime;
+	m_deltaTime = (currentTime - m_previousTime) * 0.001f;
+	m_previousTime = currentTime;
 
-	for (auto&& pawn : *gameobjects)
+	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)
 		{
-			pawn->Update(deltaTime, camera->GetView(), camera->GetProjection(), camera->GetLocation());
+			pawn->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 		}
 	}
 
-	gametimer -= deltaTime;
-	label->Update(std::to_string(static_cast<int>(gametimer)));
+	m_player ->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 
+	m_gametimer -= m_deltaTime;
+	if (m_player1respawn > 0) {
+		m_player1respawn -= m_deltaTime;
+		if (m_player1respawn <= 0) {
+			FMOD::Channel* channel;
+			audioMgr->playSound(fxrespawn, 0, false, &channel);
+			m_player->Respawn();
+		}
+	}
+	if (m_player2respawn > 0) {
+		m_player2respawn -= m_deltaTime;
+	}
 
-	m_timeStep = deltaTime;
+	m_timer->Update(std::to_string(static_cast<int>(m_gametimer)));
+	m_player1Score->Update("0");
+	m_player2Score->Update("0");
+
+	m_timeStep = m_deltaTime;
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
+
+	DeletionCheck();
 }
 
 void Scene::Render()
@@ -123,12 +167,34 @@ void Scene::Render()
 	//m_world.DrawDebugData();
 	/***ONLY FOR DEBUG****/
 
-	for (auto&& pawn : *gameobjects)
+	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)
 		{
 			pawn->Render();
 		}
 	}
-	label->Render();
+	m_player->Render();
+	m_player2->Render();
+	m_timer->Render();
+	m_player1Score->Render();
+	m_player2Score->Render();
+
+	
+}
+
+void Scene::DeletionCheck()
+{
+	if (m_player != nullptr && m_player->IsDead() && m_player1respawn <= 0)
+	{
+		//m_player = nullptr;
+		FMOD::Channel* channel;
+		audioMgr->playSound(fxThump, 0, false, &channel);
+		m_player1respawn = 5;
+	}
+
+	if (m_player != nullptr && m_player2->IsDead())
+	{
+		m_player2 = nullptr;
+	}
 }

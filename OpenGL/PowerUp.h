@@ -12,8 +12,6 @@ public:
 
 protected:
 	float lifespan;
-	float lifetimer;
-
-	bool isactive;
+	glm::vec2 spawnpoint;
 
 };
