@@ -16,6 +16,8 @@ public:
 
 	void Die();
 
+	void Respawn();
+
 private:
 	CPlayerShield m_shield;
 };

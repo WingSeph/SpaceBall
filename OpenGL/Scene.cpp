@@ -157,6 +157,11 @@ void Scene::Update()
 	}
 	if (m_player2respawn > 0) {
 		m_player2respawn -= m_deltaTime;
+		if (m_player2respawn <= 0) {
+			FMOD::Channel* channel;
+			audioMgr->playSound(fxrespawn, 0, false, &channel);
+			m_player2->Respawn();
+		}
 	}
 
 	m_timer->Update(std::to_string(static_cast<int>(m_gametimer)));
@@ -212,8 +217,11 @@ void Scene::DeletionCheck()
 		m_player1respawn = 5;
 	}
 
-	if (m_player != nullptr && m_player2->IsDead())
+	if (m_player != nullptr && m_player2->IsDead() && m_player2respawn <= 0)
 	{
-		m_player2 = nullptr;
+		//m_player2 = nullptr;
+		FMOD::Channel* channel;
+		audioMgr->playSound(fxThump, 0, false, &channel);
+		m_player2respawn = 5;
 	}
 }

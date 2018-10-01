@@ -19,7 +19,7 @@ void CPlayerShield::Init(std::string _filepath, glm::vec3 _position, float _fRot
 void CPlayerShield::Update(float _deltaTime, glm::mat4 _view, glm::mat4 _projection, glm::vec3 _cameraPos, float _fRotation)
 {
 	m_fRotation = _fRotation;
-	m_physicsBody->SetTransform(b2Vec2(m_location.x, m_location.y), glm::radians(m_fRotation));
+	//m_physicsBody->SetTransform(b2Vec2(m_location.x, m_location.y), m_fRotation);
 	Pawn::Update(_deltaTime, _view, _projection, _cameraPos);
 }
 

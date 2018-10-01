@@ -34,7 +34,6 @@ private:
 	std::unique_ptr<Ball> m_ball;
 
 	std::unique_ptr<Pawn>
-		m_ball,
 		m_bgm,
 		m_wallU,
 		m_wallD,
