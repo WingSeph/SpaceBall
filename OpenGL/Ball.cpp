@@ -30,6 +30,10 @@ void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
+	if (m_physicsBody->GetLinearVelocity() == b2Vec2(0, 0))
+	{
+		m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
+	}
 }
 
 void Ball::Render()
