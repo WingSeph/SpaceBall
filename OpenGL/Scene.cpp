@@ -91,25 +91,16 @@ void Scene::Init()
 
 	m_powerup->Init("Resources/Textures/splitballpowerup.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
 
-	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
-
 	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
 	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
 
 	m_world.SetContactListener(&g_myContactListenerInstance);
 	m_bgm->Init("Resources/Textures/Background.bmp", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), m_shader, true, COLLIDER_CIRCLE, m_world);
 	m_bgm->GetBody()->SetActive(false);
-
-	//m_gameobjects->push_back(std::move(m_bgm));
-	
 	m_gameobjects->push_back(std::move(m_wallU));
 	m_gameobjects->push_back(std::move(m_wallD));
 	m_gameobjects->push_back(std::move(m_wallL));
 	m_gameobjects->push_back(std::move(m_wallR));
-
-	//m_gameobjects->push_back(m_background);
-	/*m_gameobjects->push_back(std::move(m_player));
-	m_gameobjects->push_back(std::move(m_player2));*/
 
 	m_world.SetDebugDraw(&m_debugDraw);
 	uint32 flags = 0;
@@ -326,3 +317,31 @@ bool Scene::IsOverlap(const b2Body* body)
 	m_world.QueryAABB(&callback, GetBodyAABB(body));
 	return callback.m_isOverlap;
 }
+//when the main timer reach 0 ends the game
+bool Scene::GameOver()
+{
+	if (m_gametimer <= 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+//I would like to know who won the game
+//at the end of the match create a function to calculate which player has more score
+int Scene::WhoWon()
+{
+	if (player1score > player2score)
+	{
+		return 1;
+	}
+	else if (player2score > player1score)
+	{
+		return 2;
+	}
+	return 0;
+}
+
+//create the sprite for the different type of powerups
+//create different powerups class for all types
+//create a spawner location at a random location with a random chance of different powerup selected

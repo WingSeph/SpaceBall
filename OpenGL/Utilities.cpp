@@ -85,3 +85,18 @@ void RotateVector(b2Vec2& _vector, float _fDeg)
 	_vector.x = pX;
 	_vector.y = pY;
 }
+
+bool MenuButtons()
+{
+	// 'e' = EXIT
+	if (g_keyState[(unsigned char)'e'] == INPUT_HOLD)
+	{
+		exit(0);
+	}
+	// 'g' = MENU
+	if (g_keyState[(unsigned char)'g'] == INPUT_HOLD)
+	{
+		return true;
+	}
+	return false;
+}
