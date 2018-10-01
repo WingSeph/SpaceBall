@@ -136,3 +136,7 @@ void Pawn::SetPowerUp(bool t_bHasPowerUp, PowerUpType t_poweruptype)
 	m_bHasPowerUp = t_bHasPowerUp;
 	m_poweruptype = t_poweruptype;
 }
+void Pawn::SetTrigger(bool _b)
+{
+	m_physicsBody->GetFixtureList()->SetSensor(_b);
+}

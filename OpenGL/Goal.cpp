@@ -19,6 +19,7 @@ void Goal::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 void Goal::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
+	//m_physicsBody->SetTransform(b2Vec2(m_location.x, m_location.y), 0);
 }
 
 void Goal::Render()

@@ -1,12 +1,15 @@
 #pragma once
 #include "Ball.h"
 #include "MeshCube.h"
+#include <iostream>
 
 Ball::Ball()
 {}
 
 Ball::~Ball()
 {}
+
+
 
 void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
 {
@@ -26,4 +29,27 @@ void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 void Ball::Render()
 {
 	Pawn::Render();
+}
+
+void Ball::OnCollisionEnter(Pawn* _other) {
+
+		std::cout << "hit";
+	
+}
+
+void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
+	if (b2Distance(m_physicsBody->GetWorldCenter(), _gate) < 2) {
+		playerscore++;
+		m_bIsDead = true;
+		m_bCanRender = false;
+		m_physicsBody->SetTransform(b2Vec2(10.0f, 8.0f), m_physicsBody->GetAngle());
+		m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
+		m_physicsBody->SetActive(false);
+	}
+}
+
+void Ball::Respawn() {
+	m_bIsDead = false;
+	m_bCanRender = true;
+	m_physicsBody->SetActive(true);
 }

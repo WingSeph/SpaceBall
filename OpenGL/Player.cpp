@@ -86,8 +86,6 @@ void Player::Die()
 	m_physicsBody->SetTransform(b2Vec2(6.0f, 6.0f), m_physicsBody->GetAngle());
 	m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
 	m_physicsBody->SetActive(false);
-
-	// Reduce score of player;
 }
 
 void Player::Respawn()

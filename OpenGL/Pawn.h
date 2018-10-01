@@ -49,8 +49,13 @@ public:
 	bool HasPowerUp() { return m_bHasPowerUp; }
 	void SetPowerUp(bool t_bHasPowerUp, PowerUpType t_poweruptype);
 
+	void SetTrigger(bool _b);
+
 	std::string GetTag() { return m_sTag; }
 	void SetTag(std::string _sTag) { m_sTag = _sTag; }
+
+	void SetIsDead(bool _b) { m_bIsDead = _b; }
+	void SetCanRender(bool _b) { m_bCanRender = _b; }
 
 protected:
 	std::unique_ptr<Mesh> m_mesh;
