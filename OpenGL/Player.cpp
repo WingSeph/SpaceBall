@@ -50,7 +50,7 @@ void Player::MovementChecker()
 		// Move forwards
 		b2Vec2 direction = b2Vec2(0, 1);
 		RotateVector(direction, m_fRotation);
-		direction *= 20;
+		direction *= 2;
 		m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 	}
 	// 's' = Down

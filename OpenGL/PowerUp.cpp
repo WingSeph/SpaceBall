@@ -35,6 +35,9 @@ void PowerUp::Render()
 	{
 		Pawn::Render();
 	}
+
+
+
 }
 
 void PowerUp::OnCollisionEnter(Pawn * _other)
@@ -45,3 +48,52 @@ void PowerUp::OnCollisionEnter(Pawn * _other)
 	//otherpawn gets powerup
 	_other->SetPowerUp(true, POWERUP1);
 }
+
+/*
+	float PowerUpFactor;
+
+	switch (m_PowerUpType)
+	{
+	case POWERUP1:
+		//speed up player
+		PowerUpFactor = 1.5f;
+		break;
+
+	case POWERUP2:
+		//slow down opponent
+		PowerUpFactor = 0.5f;
+		break;
+
+	case POWERUP3:
+		//spawn ball at ball's origin & reverse velocity
+		PowerUpFactor = 0.5f;
+		break;
+
+	case POWERUP4:
+		//Sticky shield that can catch balls and shoot them in a chosen direction.
+		if player 
+		break;
+
+	case POWERUP5:
+		//Invincibility
+		//player will not die
+		break;
+
+	case POWERUP6:
+		//Bomb pick up that can be dropped that will push back the player who hits it.
+		//bomb placed in front of players' shield
+		break;
+
+	default:
+		PowerUpFactor = 1.0f;
+		break;
+	}
+
+void Player::MovementChecker()
+{
+	direction *= 20 * PowerUpFactor;
+	m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
+}
+
+
+*/
