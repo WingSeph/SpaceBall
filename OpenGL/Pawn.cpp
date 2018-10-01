@@ -55,6 +55,11 @@ void Pawn::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 
 void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
+	if (m_PowerUpType == POWERUP1)
+	{
+		//do its effect
+	}
+
 	if (!m_bIsFixed)
 	{
 		m_fRotation = m_physicsBody->GetAngle();
@@ -65,7 +70,7 @@ void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 		m_physicsBody->SetTransform(b2Vec2(m_location.x, m_location.y), m_fRotation);
 	}
 
-	//scale = 
+	//scale =
 	m_mesh->Update
 	(
 		t_projection,
@@ -119,7 +124,6 @@ b2Body* Pawn::GetBody()
 
 void Pawn::OnCollisionEnter(Pawn* _other)
 {
-	
 }
 
 bool Pawn::IsDead()
@@ -127,6 +131,11 @@ bool Pawn::IsDead()
 	return(m_bIsDead);
 }
 
+void Pawn::SetPowerUp(bool t_bHasPowerUp, PowerUpType t_poweruptype)
+{
+	m_bHasPowerUp = t_bHasPowerUp;
+	m_PowerUpType = t_poweruptype;
+}
 void Pawn::SetTrigger(bool _b)
 {
 	m_physicsBody->GetFixtureList()->SetSensor(_b);

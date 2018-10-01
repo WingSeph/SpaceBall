@@ -9,6 +9,7 @@
 #include "Player2.h"
 #include "Ball.h"
 #include "TextLabel.h"
+#include "PowerUp.h"
 
 class Scene
 {
@@ -22,6 +23,9 @@ public:
 
 	void DeletionCheck();
 
+	b2AABB GetBodyAABB(const b2Body* body);
+	bool IsOverlap(const b2Body* body);
+
 private:
 	ShaderLoader m_shaderloader;
 	GLuint m_shader;
@@ -33,6 +37,9 @@ private:
 
 	std::unique_ptr<Ball> m_ball;
 
+	std::unique_ptr<PowerUp> m_powerup;
+
+
 	std::unique_ptr<Pawn>
 		m_bgm,
 		m_wallU,
@@ -40,8 +47,8 @@ private:
 		m_wallL,
 		m_wallR,
 		m_goalL,
-		m_goalR,
-		m_background;
+		m_goalR;
+		
 
 	std::unique_ptr<std::vector<std::unique_ptr<Pawn>>> m_gameobjects;
 

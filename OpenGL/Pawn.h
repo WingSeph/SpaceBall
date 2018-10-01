@@ -10,6 +10,12 @@ enum EColliderShape
 	COLLIDER_CIRCLE = 2
 };
 
+enum PowerUpType
+{
+	POWERUP1,
+	POWERUP2
+};
+
 class Pawn
 {
 public:
@@ -40,6 +46,8 @@ public:
 	virtual void OnCollisionEnter(Pawn* _other);
 
 	bool IsDead();
+	bool HasPowerUp() { return m_bHasPowerUp; }
+	void SetPowerUp(bool t_bHasPowerUp, PowerUpType t_poweruptype);
 
 	void SetTrigger(bool _b);
 
@@ -70,5 +78,8 @@ protected:
 	bool m_bIsDead = false;
 	bool m_bCanRender = true;
 	bool m_bIsFixed;
+	bool m_bHasPowerUp = false;
 	std::string m_sTag;
+
+	PowerUpType m_PowerUpType;
 };

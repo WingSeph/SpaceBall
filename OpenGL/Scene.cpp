@@ -56,14 +56,13 @@ Scene::Scene()
 	m_goalR = std::make_unique<Goal>();
 	m_goalR->SetTag("Goal2");
 
-	//m_background = std::make_shared<Background>();
+	m_powerup =	std::make_unique<PowerUp>();
+
 	m_bgm = std::make_unique<Background>();
 	m_player = std::make_unique<Player>();
 	m_player2 = std::make_unique<Player2>();
 
 	m_gameobjects = std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
-
-
 }
 
 Scene::~Scene()
@@ -72,9 +71,8 @@ Scene::~Scene()
 
 void Scene::Init()
 {
-
 	InitFmod(); LoadAudio();
-	FMOD::Channel* channel; 
+	FMOD::Channel* channel;
 	audioMgr->playSound(bgmTheme, 0, false, &channel);
 
 	// Creating groundbody
@@ -90,6 +88,9 @@ void Scene::Init()
 
 	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+
+	m_powerup->Init("Resources/Textures/Wall.bmp", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+
 	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
 
 	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
@@ -105,7 +106,7 @@ void Scene::Init()
 	m_gameobjects->push_back(std::move(m_wallD));
 	m_gameobjects->push_back(std::move(m_wallL));
 	m_gameobjects->push_back(std::move(m_wallR));
-	
+
 	//m_gameobjects->push_back(m_background);
 	/*m_gameobjects->push_back(std::move(m_player));
 	m_gameobjects->push_back(std::move(m_player2));*/
@@ -122,7 +123,6 @@ void Scene::Init()
 
 void Scene::Update()
 {
-	
 	//DeltaTime
 	if (m_firstrun == false)
 	{
@@ -145,6 +145,9 @@ void Scene::Update()
 	m_goalR->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_player ->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	
+	
+	m_powerup->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 
 	m_gametimer -= m_deltaTime;
 	if (m_player1respawn > 0) {
@@ -169,6 +172,13 @@ void Scene::Update()
 	m_player2Score->Update(std::to_string(player2score));
 
 	m_timeStep = m_deltaTime;
+
+	//powerup overlap check
+	//if (IsOverlap(m_powerup->GetBody()))
+	//{
+	//	m_powerup->OnCollisionEnter(m_player.get());
+	//}
+
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
 	m_ball->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
 	m_ball->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
@@ -180,6 +190,17 @@ void Scene::Update()
 	}
 
 	DeletionCheck();
+
+	for (auto&& pawn : *m_gameobjects)
+	{
+		if (pawn)
+		{
+			pawn->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+		}
+	}
+
+	m_player->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 }
 
 void Scene::Render()
@@ -196,15 +217,38 @@ void Scene::Render()
 			pawn->Render();
 		}
 	}
-	m_goalL->Render();
-	m_goalR->Render();
-	m_player->Render();
-	m_player2->Render();
-	m_timer->Render();
-	m_player1Score->Render();
-	m_player2Score->Render();
-
-	
+	if (m_goalL)
+	{
+		m_goalL->Render();
+	}
+	if (m_goalR)
+	{
+		m_goalR->Render();
+	}
+	if (m_player)
+	{
+		m_player->Render();
+	}
+	if (m_player2)
+	{
+		m_player2->Render();
+	}
+	if (m_timer)
+	{
+		m_timer->Render();
+	}
+	if (m_player1Score)
+	{
+		m_player1Score->Render();
+	}
+	if (m_player2Score)
+	{
+		m_player2Score->Render();
+	}
+	if (m_powerup)
+	{
+		m_powerup->Render();
+	}
 }
 
 void Scene::DeletionCheck()
@@ -224,4 +268,61 @@ void Scene::DeletionCheck()
 		audioMgr->playSound(fxThump, 0, false, &channel);
 		m_player2respawn = 5;
 	}
+}
+
+/// Callback to check for overlap of given body.
+struct CheckOverlapCallback : b2QueryCallback
+{
+	CheckOverlapCallback(const b2Body* body) :
+		m_body(body), m_isOverlap(false) {}
+
+	// override
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		// Skip self.
+		if (fixture->GetBody() == m_body)
+			return true;
+
+		for (const b2Fixture* bodyFixture = m_body->GetFixtureList(); bodyFixture;
+			bodyFixture = bodyFixture->GetNext())
+		{
+			if (b2TestOverlap(fixture->GetShape(), 0, bodyFixture->GetShape(), 0,
+				fixture->GetBody()->GetTransform(), m_body->GetTransform()))
+			{
+				m_isOverlap = true;
+				return false;
+			}
+		}
+	}
+
+	const b2Body* m_body;
+	bool m_isOverlap;
+};
+
+/// Gets the combined AABB of all shapes of the given body.
+b2AABB Scene::GetBodyAABB(const b2Body* body)
+{
+	b2AABB result;
+	b2Transform trans = body->GetTransform();
+	const b2Fixture* first = body->GetFixtureList();
+
+	for (const b2Fixture* fixture = first; fixture; fixture = fixture->GetNext())
+	{
+		b2AABB aabb;
+		fixture->GetShape()->ComputeAABB(&aabb, trans, 0);
+		if (fixture == first)
+			result = aabb;
+		else
+			result.Combine(aabb);
+	}
+
+	return result;
+}
+
+/// Returns true if the given body overlaps any other body in the world.
+bool Scene::IsOverlap(const b2Body* body)
+{
+	CheckOverlapCallback callback(body);
+	m_world.QueryAABB(&callback, GetBodyAABB(body));
+	return callback.m_isOverlap;
 }

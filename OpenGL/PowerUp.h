@@ -1,7 +1,9 @@
 #pragma once
 #include "Pawn.h"
-class PowerUp :
-	public Pawn
+#include "Player.h"
+#include "Player2.h"
+
+class PowerUp : public Pawn
 {
 public:
 	PowerUp();
@@ -10,8 +12,12 @@ public:
 	virtual void Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos);
 	virtual void Render();
 
+	void OnCollisionEnter(Pawn* _other);
+
 protected:
 	float lifespan;
-	glm::vec2 spawnpoint;
+	float lifetimer;
+	bool isactive;
 
+	glm::vec2 spawnpoint;
 };
