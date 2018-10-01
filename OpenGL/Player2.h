@@ -12,8 +12,6 @@ public:
 	virtual void Render();
 	void OnCollisionEnter(Pawn* _other);
 
-	//b2WeldJointDef jointdef;
-
 
 	void MovementChecker();
 

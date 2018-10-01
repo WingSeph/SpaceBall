@@ -12,9 +12,9 @@ Player2::~Player2()
 void Player2::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, b2World& t_world)
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
-	m_shield.Init("Resources/Textures/Player2Shield.png", glm::vec3(t_position.x, t_position.y + 1, t_position.z), t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
+	m_shield.Init("Resources/Textures/Player2Shield.png", glm::vec3(t_position.x, t_position.y + 0.5f, t_position.z), t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
-	
+
 	SetTrigger(true);
 }
 
@@ -43,8 +43,8 @@ void Player2::Render()
 
 void Player2::MovementChecker()
 {
-	m_physicsBody->SetLinearDamping(0.5f);
-	m_physicsBody->SetAngularDamping(1.0f);
+	m_physicsBody->SetLinearDamping(0.8f);
+	m_physicsBody->SetAngularDamping(2.0f);
 
 	//'w' = Up
 	if (GetButtonDown('i'))
@@ -80,6 +80,7 @@ void Player2::MovementChecker()
 		m_physicsBody->SetAngularVelocity(-100);
 	}
 
+	m_shield.GetBody()->SetTransform(m_physicsBody->GetPosition() + b2Vec2(-1.0f, 0), 90);
 }
 
 void Player2::Die()
@@ -95,7 +96,6 @@ void Player2::Die()
 	m_shield.GetBody()->SetTransform(b2Vec2(12.0f, 6.0f), m_physicsBody->GetAngle());
 	m_shield.GetBody()->SetLinearVelocity(b2Vec2(0, 0));
 	m_shield.GetBody()->SetActive(false);
-	// Reduce score of player;
 }
 
 void Player2::Respawn()
@@ -111,8 +111,5 @@ void Player2::Respawn()
 
 void Player2::OnCollisionEnter(Pawn* _other)
 {
-	if (_other->GetTag() == "Wall")
-	{
-		Die();
-	}
+	
 }
