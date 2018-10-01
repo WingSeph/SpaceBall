@@ -26,6 +26,11 @@ public:
 	b2AABB GetBodyAABB(const b2Body* body);
 	bool IsOverlap(const b2Body* body);
 
+	bool GameOver();
+	int WhoWon();
+
+
+
 private:
 	ShaderLoader m_shaderloader;
 	GLuint m_shader;
@@ -54,14 +59,16 @@ private:
 
 	std::unique_ptr<TextLabel> m_timer, m_player1Score, m_player2Score;
 
-	float m_gametimer = 60;
+	float m_gametimer = 30;
 	float m_player1respawn = 0;
 	float m_player2respawn = 0;
 	bool m_firstrun = false;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;
+
 	int player1score = 0;
 	int player2score = 0;
+
 
 	b2World m_world = b2World(b2Vec2(0, 0));
 	b2Body* m_worldbody;

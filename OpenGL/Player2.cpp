@@ -87,13 +87,13 @@ void Player2::Die()
 {
 	m_bIsDead = true;
 	m_bCanRender = false;
-	m_physicsBody->SetTransform(b2Vec2(12.0f, 6.0f), m_physicsBody->GetAngle());
+	m_physicsBody->SetTransform(b2Vec2(16.0f, 6.0f), m_physicsBody->GetAngle());
 	m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
 	m_physicsBody->SetActive(false);
 
 	m_shield.SetIsDead(true);
 	m_shield.SetCanRender(false);
-	m_shield.GetBody()->SetTransform(b2Vec2(12.0f, 6.0f), m_physicsBody->GetAngle());
+	m_shield.GetBody()->SetTransform(b2Vec2(16.0f, 6.0f), m_physicsBody->GetAngle());
 	m_shield.GetBody()->SetLinearVelocity(b2Vec2(0, 0));
 	m_shield.GetBody()->SetActive(false);
 }

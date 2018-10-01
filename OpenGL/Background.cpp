@@ -18,7 +18,7 @@ void Background::Init(std::string t_filepath, glm::vec3 t_position, float t_rota
 
 void Background::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
-	Update(t_deltaTime, t_view, t_projection, t_cameraPos);
+	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
 void Background::Render()

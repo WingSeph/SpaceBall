@@ -23,6 +23,14 @@ enum InputMouse
 	MOUSE_RIGHT
 };
 
+enum GameState
+{
+	MENU,
+	SCENE,
+	GAMEOVER
+};
+
+
 void Keyboard_Down(unsigned char key, int x, int y);
 
 void Keyboard_Up(unsigned char key, int x, int y);
@@ -38,3 +46,5 @@ bool GetMouseButtonUp(int _iButton);
 float GetDeltaRotation();
 
 void RotateVector(b2Vec2& _vector, float _fDeg);
+
+bool MenuButtons();
