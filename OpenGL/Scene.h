@@ -40,7 +40,7 @@ private:
 	std::unique_ptr<Player> m_player;
 	std::unique_ptr<Player2> m_player2;
 
-	std::unique_ptr<Ball> m_ball;
+	std::unique_ptr<Ball> m_ball1;
 
 	std::unique_ptr<PowerUp> m_powerup;
 

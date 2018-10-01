@@ -39,8 +39,8 @@ Scene::Scene()
 	m_player1Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(20, WINDOW_HEIGHT - 50), glm::vec3(0, 0, 1));
 	m_player2Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50), glm::vec3(1, 0, 0));
 
-	m_ball = std::make_unique<Ball>();
-	m_ball->SetTag("Ball");
+	m_ball1 = std::make_unique<Ball>();
+	m_ball1->SetTag("Ball");
 
 	m_wallU = std::make_unique<Wall>();
 
@@ -79,7 +79,7 @@ void Scene::Init()
 	b2BodyDef bd;
 	m_worldbody = m_world.CreateBody(&bd);
 	
-	m_ball->Init("Resources/Textures/meteor.png", glm::vec3(10.0f, 8.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_ball1->Init("Resources/Textures/meteor.png", glm::vec3(10.0f, 8.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
 	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 0, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
@@ -124,7 +124,7 @@ void Scene::Update()
 	m_deltaTime = (currentTime - m_previousTime) * 0.001f;
 	m_previousTime = currentTime;
 
-	m_ball->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	m_ball1->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)
@@ -165,19 +165,19 @@ void Scene::Update()
 	m_timeStep = m_deltaTime;
 
 	//powerup overlap check
-	//if (IsOverlap(m_powerup->GetBody()))
-	//{
-	//	m_powerup->OnCollisionEnter(m_player.get());
-	//}
+	if (IsOverlap(m_powerup->GetBody()))
+	{
+		m_powerup->OnCollisionEnter(m_player.get());
+	}
 
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
-	m_ball->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
-	m_ball->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
+	m_ball1->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
+	m_ball1->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
 
-	if (m_ball->IsDead()) {
+	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxlaugh, 0, false, &channel);
-		m_ball->Respawn();
+		m_ball1->Respawn();
 	}
 
 	DeletionCheck();
@@ -200,7 +200,7 @@ void Scene::Render()
 	//m_world.DrawDebugData();
 	/***ONLY FOR DEBUG****/
 	m_bgm->Render();
-	m_ball->Render();
+	m_ball1->Render();
 	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)

@@ -13,6 +13,9 @@ void CPlayerShield::Init(std::string _filepath, glm::vec3 _position, float _fRot
 {
 	m_mesh = std::make_unique<MeshCube>(_filepath, _shader);
 	Pawn::Init(_filepath, _position, _fRotation, _scale, _shader, _isFixed, _colliderShape, _world);
+
+	m_physicsBody->GetFixtureList()->SetRestitution(0.8f);
+
 	m_sTag = "Shield";
 }
 
