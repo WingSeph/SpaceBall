@@ -39,7 +39,7 @@ void Ball::Render()
 
 void Ball::OnCollisionEnter(Pawn* _other)
 {
-	m_physicsBody->SetLinearVelocity(b2Vec2(2 * m_physicsBody->GetLinearVelocity().x, 2 * m_physicsBody->GetLinearVelocity().y));
+	m_physicsBody->SetLinearVelocity(b2Vec2(2 * m_physicsBody->GetLinearVelocity().x + 1, 2 * m_physicsBody->GetLinearVelocity().y + 1));
 }
 
 void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
