@@ -56,10 +56,8 @@ Scene::Scene()
 	m_goalR = std::make_unique<Goal>();
 	m_goalR->SetTag("Goal2");
 
-	m_powerup =
-		std::make_unique<PowerUp>();
+	m_powerup =	std::make_unique<PowerUp>();
 
-	//m_background = std::make_shared<Background>();
 	m_bgm = std::make_unique<Background>();
 	m_player = std::make_unique<Player>();
 	m_player2 = std::make_unique<Player2>();
@@ -91,7 +89,7 @@ void Scene::Init()
 	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 
-	m_powerup->Init("Resources/Textures/ship.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_powerup->Init("Resources/Textures/Wall.bmp", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
 
 	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
 
@@ -108,7 +106,7 @@ void Scene::Init()
 	m_gameobjects->push_back(std::move(m_wallD));
 	m_gameobjects->push_back(std::move(m_wallL));
 	m_gameobjects->push_back(std::move(m_wallR));
-	
+
 	//m_gameobjects->push_back(m_background);
 	/*m_gameobjects->push_back(std::move(m_player));
 	m_gameobjects->push_back(std::move(m_player2));*/
@@ -147,6 +145,9 @@ void Scene::Update()
 	m_goalR->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_player ->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	
+	
+	m_powerup->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 
 	m_gametimer -= m_deltaTime;
 	if (m_player1respawn > 0) {
@@ -216,13 +217,38 @@ void Scene::Render()
 			pawn->Render();
 		}
 	}
-	m_goalL->Render();
-	m_goalR->Render();
-	m_player->Render();
-	m_player2->Render();
-	m_timer->Render();
-	m_player1Score->Render();
-	m_player2Score->Render();
+	if (m_goalL)
+	{
+		m_goalL->Render();
+	}
+	if (m_goalR)
+	{
+		m_goalR->Render();
+	}
+	if (m_player)
+	{
+		m_player->Render();
+	}
+	if (m_player2)
+	{
+		m_player2->Render();
+	}
+	if (m_timer)
+	{
+		m_timer->Render();
+	}
+	if (m_player1Score)
+	{
+		m_player1Score->Render();
+	}
+	if (m_player2Score)
+	{
+		m_player2Score->Render();
+	}
+	if (m_powerup)
+	{
+		m_powerup->Render();
+	}
 }
 
 void Scene::DeletionCheck()

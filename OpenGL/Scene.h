@@ -37,6 +37,9 @@ private:
 
 	std::unique_ptr<Ball> m_ball;
 
+	std::unique_ptr<PowerUp> m_powerup;
+
+
 	std::unique_ptr<Pawn>
 		m_bgm,
 		m_wallU,
@@ -44,9 +47,8 @@ private:
 		m_wallL,
 		m_wallR,
 		m_goalL,
-		m_goalR,
-		m_background,
-		m_powerup;
+		m_goalR;
+		
 
 	std::unique_ptr<std::vector<std::unique_ptr<Pawn>>> m_gameobjects;
 

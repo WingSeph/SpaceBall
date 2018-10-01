@@ -134,7 +134,7 @@ bool Pawn::IsDead()
 void Pawn::SetPowerUp(bool t_bHasPowerUp, PowerUpType t_poweruptype)
 {
 	m_bHasPowerUp = t_bHasPowerUp;
-	m_poweruptype = t_poweruptype;
+	m_PowerUpType = t_poweruptype;
 }
 void Pawn::SetTrigger(bool _b)
 {
