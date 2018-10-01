@@ -2,8 +2,6 @@
 #include "Player2.h"
 #include "MeshCube.h"
 #include "Utilities.h"
-#include "Dependencies/glm/gtc/matrix_transform.hpp"
-
 
 Player2::Player2()
 {}
@@ -82,7 +80,6 @@ void Player2::MovementChecker()
 		m_physicsBody->SetAngularVelocity(-100);
 	}
 
-	m_shield.GetBody()->SetTransform(m_physicsBody->GetPosition() + b2Vec2(glm::radians(cosf(m_fRotation)), glm::radians(sinf(m_fRotation)) + 1), m_physicsBody->GetAngle());
 }
 
 void Player2::Die()
@@ -98,6 +95,7 @@ void Player2::Die()
 	m_shield.GetBody()->SetTransform(b2Vec2(12.0f, 6.0f), m_physicsBody->GetAngle());
 	m_shield.GetBody()->SetLinearVelocity(b2Vec2(0, 0));
 	m_shield.GetBody()->SetActive(false);
+	// Reduce score of player;
 }
 
 void Player2::Respawn()
