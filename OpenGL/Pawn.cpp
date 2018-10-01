@@ -126,3 +126,8 @@ bool Pawn::IsDead()
 {
 	return(m_bIsDead);
 }
+
+void Pawn::SetTrigger(bool _b)
+{
+	m_physicsBody->GetFixtureList()->SetSensor(_b);
+}

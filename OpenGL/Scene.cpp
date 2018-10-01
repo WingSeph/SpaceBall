@@ -6,7 +6,6 @@
 #include "Goal.h"
 #include "Background.h"
 
-#include "Player2.h"
 #include "ContactListener.h"
 #include "Dependencies/FMOD/fmod.hpp"
 
@@ -92,8 +91,10 @@ void Scene::Init()
 	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	//background->Init("Resources/Textures/Background.bmp",	glm::vec3(10, 5.0f, 1),			0.0f,			glm::vec3(10, 10, 1.0f), m_shader, m_world);
-	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
-	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(14.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+
+	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
+	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(8.0f, 8.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
+
 	m_world.SetContactListener(&g_myContactListenerInstance);
 	m_bgm->Init("Resources/Textures/Background.bmp", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), m_shader, true, COLLIDER_CIRCLE, m_world);
 	m_bgm->GetBody()->SetActive(false);
@@ -156,6 +157,11 @@ void Scene::Update()
 	}
 	if (m_player2respawn > 0) {
 		m_player2respawn -= m_deltaTime;
+		if (m_player2respawn <= 0) {
+			FMOD::Channel* channel;
+			audioMgr->playSound(fxrespawn, 0, false, &channel);
+			m_player2->Respawn();
+		}
 	}
 
 	m_timer->Update(std::to_string(static_cast<int>(m_gametimer)));
@@ -211,8 +217,11 @@ void Scene::DeletionCheck()
 		m_player1respawn = 5;
 	}
 
-	if (m_player != nullptr && m_player2->IsDead())
+	if (m_player != nullptr && m_player2->IsDead() && m_player2respawn <= 0)
 	{
-		m_player2 = nullptr;
+		//m_player2 = nullptr;
+		FMOD::Channel* channel;
+		audioMgr->playSound(fxThump, 0, false, &channel);
+		m_player2respawn = 5;
 	}
 }

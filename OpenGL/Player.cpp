@@ -7,18 +7,17 @@
 #include "MeshCube.h"
 #include "Utilities.h"
 
-
 Player::Player()
 {}
 
 Player::~Player()
 {}
 
-void Player::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
+void Player::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, b2World& t_world)
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
-	m_shield.Init("Resources/Textures/Player1Shield.png", t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
-	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
+	m_shield.Init("Resources/Textures/Player1Shield.png", t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
+	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
 }
 
 void Player::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
@@ -87,11 +86,10 @@ void Player::Die()
 	m_physicsBody->SetTransform(b2Vec2(6.0f,6.0f), m_physicsBody->GetAngle());
 	m_physicsBody->SetLinearVelocity(b2Vec2(0,0));
 	m_physicsBody->SetActive(false);
-
-	// Reduce score of player;
 }
 
-void Player::Respawn() {
+void Player::Respawn()
+{
 	m_bIsDead = false;
 	m_bCanRender = true;
 	m_physicsBody->SetActive(true);
