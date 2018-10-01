@@ -31,10 +31,12 @@ void Ball::Render()
 	Pawn::Render();
 }
 
-void Ball::OnCollisionEnter(Pawn* _other) {
-
-		std::cout << "hit";
-	
+void Ball::OnCollisionEnter(Pawn* _other)
+{
+	b2Vec2 direction = (m_physicsBody->GetWorldCenter() - _other->GetBody()->GetWorldCenter());
+	direction.Normalize();
+	direction *= 20000000000.5f;
+	m_physicsBody->ApplyLinearImpulseToCenter(direction, true);
 }
 
 void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
