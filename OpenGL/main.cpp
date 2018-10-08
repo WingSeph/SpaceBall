@@ -5,7 +5,7 @@
 #include "Menu.h"
 #include "Scene.h"
 #include "GameOver.h"
-#include "Utilities.h"
+#include "Input.h"
 #include "Dependencies/Box2D/Box2D.h"
 
 std::unique_ptr<Menu> menu;
@@ -13,6 +13,21 @@ std::unique_ptr<Scene> scene;
 std::unique_ptr<GameOver> gameover;
 
 GameState gamestate = MENU;
+
+bool MenuButtons()
+{
+	// 'e' = EXIT
+	if (GetButtonDown('e'))
+	{
+		exit(0);
+	}
+	// 'g' = MENU
+	if (GetButtonDown('g'))
+	{
+		return true;
+	}
+	return false;
+}
 
 void Init()
 {
