@@ -1,40 +1,30 @@
 #pragma once
 
-//glm::vec3 GetDeltaPosition()
-//{
-//	glm::vec3 deltaPosition = glm::vec3();
-//	 //'w' = Up
-//	if (keyState[(unsigned char)'w'] == INPUT_HOLD)
-//	{
-//		deltaPosition += glm::vec3(+0.0f, +1.0f, +0.0f);
-//	}
-//	if (deltaPosition != glm::vec3(0.0f, 0.0f, 0.0f))
-//	{
-//		deltaPosition = glm::normalize(deltaPosition);
-//	}
-//	return deltaPosition;
-//}
-//
-//float GetDeltaRotation()
-//{
-//	float deltaRotation = 0.0f;
-//	//'a' = Left
-//	if (keyState[(unsigned char)'a'] == INPUT_HOLD)
-//	{
-//		deltaRotation += 1.0f;
-//	}
-//	 //'d' = Right
-//	if (keyState[(unsigned char)'d'] == INPUT_HOLD)
-//	{
-//		deltaRotation -= 1.0f;
-//	}
-//	return deltaRotation;
-//}
+#include "Utilities.h"
 
-//void ResetFalse()
-//{
-//	for (int i = 0; i < 255; i++)
-//	{
-//		keyState[i] = FALSE;
-//	}
-//}
+enum InputState
+{
+	INPUT_FIRST_RELEASE,
+	INPUT_RELEASED,
+	INPUT_FIRST_PRESS,
+	INPUT_HOLD,
+};
+
+enum InputMouse
+{
+	MOUSE_LEFT,
+	MOUSE_MIDDLE,
+	MOUSE_RIGHT
+};
+
+void Keyboard_Down(unsigned char key, int x, int y);
+void Keyboard_Up(unsigned char key, int x, int y);
+
+void Mouse(int _iButton, int _iGlutState, int _iX, int _iY);
+
+
+bool GetButtonDown(unsigned char _cKey);
+bool GetButtonUp(unsigned char _cKey);
+
+bool GetMouseButtonDown(int _iButton);
+bool GetMouseButtonUp(int _iButton);
