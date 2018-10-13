@@ -20,6 +20,7 @@ void Wall::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 
 void Wall::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
+	m_physicsBody->GetFixtureList()->SetRestitution(1.0f);
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 

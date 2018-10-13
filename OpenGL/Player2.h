@@ -21,6 +21,4 @@ public:
 
 private:
 	float m_fMoveSpeed = 10.0f;
-
-	CPlayerShield m_shield;
 };
