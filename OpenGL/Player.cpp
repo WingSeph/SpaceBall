@@ -17,8 +17,7 @@ void Player::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
 	m_shield.Init("Resources/Textures/Player1Shield.png", t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
-	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
-
+	Pawn::Init(t_filepath, t_position, 90, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
 	SetTrigger(true);
 }
 
