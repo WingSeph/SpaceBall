@@ -12,12 +12,15 @@ public:
 	virtual void Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos);
 	virtual void Render();
 
-	void OnCollisionEnter(Pawn* _other);
+	//void OnCollisionEnter(Pawn* _other);
+	void CheckCollisionOnPlayer(int _type, b2Body* _player1);
+	bool CheckCollisionOnplayer(b2Body* _player);
+	bool isactive;
 
 protected:
 	float lifespan;
 	float lifetimer;
-	bool isactive;
+	
 
 	glm::vec2 spawnpoint;
 };

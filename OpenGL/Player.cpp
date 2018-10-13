@@ -5,7 +5,7 @@
 
 #include "Player.h"
 #include "MeshCube.h"
-#include "Utilities.h"
+#include "Input.h"
 
 Player::Player()
 {}
@@ -17,8 +17,7 @@ void Player::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
 	m_shield.Init("Resources/Textures/Player1Shield.png", t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
-	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
-
+	Pawn::Init(t_filepath, t_position, 90, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
 	SetTrigger(true);
 }
 
@@ -31,11 +30,6 @@ void Player::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection,
 	m_shield.Update(t_deltaTime, t_view, t_projection, t_cameraPos, m_physicsBody->GetAngle());
 
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
-
-	if (m_location.x <= 1.25f || m_location.x >= 18.76f || m_location.y >= 13.76f || m_location.y <= 1.25f)
-	{
-		Die();
-	}
 }
 
 void Player::Render()
@@ -56,7 +50,7 @@ void Player::MovementChecker()
 		// Move forwards
 		b2Vec2 direction = b2Vec2(0, 1);
 		RotateVector(direction, m_fRotation);
-		direction *= 10;
+		direction *= m_fMoveSpeed;
 		m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 	}
 	// 's' = Down
@@ -66,22 +60,28 @@ void Player::MovementChecker()
 		b2Vec2 direction = b2Vec2(0, 1);
 		RotateVector(direction, m_fRotation);
 		direction.Normalize();
-		direction *= 10;
+		direction *= m_fMoveSpeed;
 		m_physicsBody->ApplyForce(-direction, m_physicsBody->GetWorldCenter(), true);
 	}
 
 	// 'a' = Left
 	if (GetButtonDown('a'))
 	{
-		// Rotate left
-		m_physicsBody->SetAngularVelocity(100);
+		// Move left
+		b2Vec2 direction = b2Vec2(1, 0);
+		RotateVector(direction, m_fRotation);
+		direction *= m_fMoveSpeed;
+		m_physicsBody->ApplyForce(-direction, m_physicsBody->GetWorldCenter(), true);
 	}
 
 	// 'd' = Right
 	else if (GetButtonDown('d'))
 	{
-		// Rotate right
-		m_physicsBody->SetAngularVelocity(-100);
+		// Move right
+		b2Vec2 direction = b2Vec2(1, 0);
+		RotateVector(direction, m_fRotation);
+		direction *= m_fMoveSpeed;
+		m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 	}
 
 	m_shield.GetBody()->SetTransform(m_physicsBody->GetPosition() + b2Vec2(1.0f, 0), -90);

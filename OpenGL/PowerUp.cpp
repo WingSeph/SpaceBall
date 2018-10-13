@@ -17,6 +17,8 @@ void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 	lifespan = 3.0f;
 	lifetimer = 0.0f;
 	isactive = false;
+
+	m_physicsBody->SetActive(false);
 }
 
 void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
@@ -44,14 +46,28 @@ void PowerUp::Render()
 
 }
 
-void PowerUp::OnCollisionEnter(Pawn * _other)
-{
-	//powerup disappears
-	m_bIsDead = true;
+void PowerUp::CheckCollisionOnPlayer(int _type, b2Body* _player) {
 
-	//otherpawn gets powerup
-	_other->SetPowerUp(true, POWERUP1);
 }
+
+bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
+	if (b2Distance(m_physicsBody->GetWorldCenter(), _player->GetWorldCenter()) < 1) {
+		isactive = false;
+		return true;
+	}
+
+	return false;
+}
+
+
+//void PowerUp::OnCollisionEnter(Pawn * _other)
+//{
+//	//powerup disappears
+//	m_bIsDead = true;
+//
+//	//otherpawn gets powerup
+//	_other->SetPowerUp(true, POWERUP1);
+//}
 
 /*
 	float PowerUpFactor;

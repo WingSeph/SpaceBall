@@ -165,14 +165,23 @@ void Scene::Update()
 	m_timeStep = m_deltaTime;
 
 	//powerup overlap check
-	if (IsOverlap(m_powerup->GetBody()))
-	{
-		m_powerup->OnCollisionEnter(m_player.get());
-	}
+	//if (IsOverlap(m_powerup->GetBody()))
+	//{
+	//	m_powerup->OnCollisionEnter(m_player.get());
+	//}
 
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
 	m_ball1->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
 	m_ball1->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
+
+	if (m_powerup->isactive) {
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
+			m_player2->Die();
+		}
+		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+			m_player->Die();
+		}
+	}
 
 	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
@@ -262,61 +271,61 @@ void Scene::DeletionCheck()
 }
 
 /// Callback to check for overlap of given body.
-struct CheckOverlapCallback : b2QueryCallback
-{
-	CheckOverlapCallback(const b2Body* body) :
-		m_body(body), m_isOverlap(false) {}
-
-	// override
-	bool ReportFixture(b2Fixture* fixture)
-	{
-		// Skip self.
-		if (fixture->GetBody() == m_body)
-			return true;
-
-		for (const b2Fixture* bodyFixture = m_body->GetFixtureList(); bodyFixture;
-			bodyFixture = bodyFixture->GetNext())
-		{
-			if (b2TestOverlap(fixture->GetShape(), 0, bodyFixture->GetShape(), 0,
-				fixture->GetBody()->GetTransform(), m_body->GetTransform()))
-			{
-				m_isOverlap = true;
-				return false;
-			}
-		}
-	}
-
-	const b2Body* m_body;
-	bool m_isOverlap;
-};
-
-/// Gets the combined AABB of all shapes of the given body.
-b2AABB Scene::GetBodyAABB(const b2Body* body)
-{
-	b2AABB result;
-	b2Transform trans = body->GetTransform();
-	const b2Fixture* first = body->GetFixtureList();
-
-	for (const b2Fixture* fixture = first; fixture; fixture = fixture->GetNext())
-	{
-		b2AABB aabb;
-		fixture->GetShape()->ComputeAABB(&aabb, trans, 0);
-		if (fixture == first)
-			result = aabb;
-		else
-			result.Combine(aabb);
-	}
-
-	return result;
-}
-
-/// Returns true if the given body overlaps any other body in the world.
-bool Scene::IsOverlap(const b2Body* body)
-{
-	CheckOverlapCallback callback(body);
-	m_world.QueryAABB(&callback, GetBodyAABB(body));
-	return callback.m_isOverlap;
-}
+//struct CheckOverlapCallback : b2QueryCallback
+//{
+//	CheckOverlapCallback(const b2Body* body) :
+//		m_body(body), m_isOverlap(false) {}
+//
+//	// override
+//	bool ReportFixture(b2Fixture* fixture)
+//	{
+//		// Skip self.
+//		if (fixture->GetBody() == m_body)
+//			return true;
+//
+//		for (const b2Fixture* bodyFixture = m_body->GetFixtureList(); bodyFixture;
+//			bodyFixture = bodyFixture->GetNext())
+//		{
+//			if (b2TestOverlap(fixture->GetShape(), 0, bodyFixture->GetShape(), 0,
+//				fixture->GetBody()->GetTransform(), m_body->GetTransform()))
+//			{
+//				m_isOverlap = true;
+//				return false;
+//			}
+//		}
+//	}
+//
+//	const b2Body* m_body;
+//	bool m_isOverlap;
+//};
+//
+///// Gets the combined AABB of all shapes of the given body.
+//b2AABB Scene::GetBodyAABB(const b2Body* body)
+//{
+//	b2AABB result;
+//	b2Transform trans = body->GetTransform();
+//	const b2Fixture* first = body->GetFixtureList();
+//
+//	for (const b2Fixture* fixture = first; fixture; fixture = fixture->GetNext())
+//	{
+//		b2AABB aabb;
+//		fixture->GetShape()->ComputeAABB(&aabb, trans, 0);
+//		if (fixture == first)
+//			result = aabb;
+//		else
+//			result.Combine(aabb);
+//	}
+//
+//	return result;
+//}
+//
+///// Returns true if the given body overlaps any other body in the world.
+//bool Scene::IsOverlap(const b2Body* body)
+//{
+//	CheckOverlapCallback callback(body);
+//	m_world.QueryAABB(&callback, GetBodyAABB(body));
+//	return callback.m_isOverlap;
+//}
 //when the main timer reach 0 ends the game
 bool Scene::GameOver()
 {

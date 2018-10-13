@@ -16,7 +16,7 @@ void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
 
-	m_physicsBody->GetFixtureList()->SetRestitution(0.8f);
+	m_physicsBody->GetFixtureList()->SetRestitution(1.0f);
 	m_physicsBody->SetLinearDamping(0);
 	m_physicsBody->SetAngularDamping(0);
 	m_physicsBody->GetFixtureList()->SetFriction(0);
@@ -43,7 +43,10 @@ void Ball::Render()
 
 void Ball::OnCollisionEnter(Pawn* _other)
 {
-	m_physicsBody->SetLinearVelocity(b2Vec2(2 * m_physicsBody->GetLinearVelocity().x + 1, 2 * m_physicsBody->GetLinearVelocity().y + 1));
+	while (m_physicsBody->GetLinearVelocity().Length() < 10)
+	{
+		m_physicsBody->SetLinearVelocity(b2Vec2(m_physicsBody->GetLinearVelocity().x + 1, m_physicsBody->GetLinearVelocity().y + 1));
+	}
 }
 
 void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
