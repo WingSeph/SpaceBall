@@ -16,7 +16,7 @@ void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
 
-	m_physicsBody->GetFixtureList()->SetRestitution(0.8f);
+	m_physicsBody->GetFixtureList()->SetRestitution(1.0f);
 	m_physicsBody->SetLinearDamping(0);
 	m_physicsBody->SetAngularDamping(0);
 	m_physicsBody->GetFixtureList()->SetFriction(0);

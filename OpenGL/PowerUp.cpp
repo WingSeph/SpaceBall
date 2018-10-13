@@ -17,6 +17,8 @@ void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 	lifespan = 3.0f;
 	lifetimer = 0.0f;
 	isactive = false;
+
+	m_physicsBody->SetActive(false);
 }
 
 void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
