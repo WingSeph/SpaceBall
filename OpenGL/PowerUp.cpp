@@ -9,7 +9,7 @@ PowerUp::~PowerUp()
 {
 }
 
-void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
+void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world, int _type)
 {
 	m_mesh = std::make_unique<Mesh>(t_filepath, t_shader);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
@@ -17,7 +17,7 @@ void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 	lifespan = 3.0f;
 	lifetimer = 0.0f;
 	isactive = false;
-
+	type = _type;
 	m_physicsBody->SetActive(false);
 }
 
@@ -43,10 +43,6 @@ void PowerUp::Render()
 	}
 
 
-
-}
-
-void PowerUp::CheckCollisionOnPlayer(int _type, b2Body* _player) {
 
 }
 
