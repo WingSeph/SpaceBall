@@ -89,7 +89,7 @@ void Scene::Init()
 	m_goalL->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/MainMenu.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.5f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 
-	m_powerup->Init("Resources/Textures/splitballpowerup.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world);
+	m_powerup->Init("Resources/Textures/splitballpowerup.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world, 1);
 
 	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
 	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(16.0f, 6.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
@@ -174,7 +174,7 @@ void Scene::Update()
 	m_ball1->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
 	m_ball1->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
 
-	if (m_powerup->isactive) {
+	if (m_powerup->isactive && m_powerup->type == 1) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
 			m_player2->Die();
 		}
@@ -182,6 +182,16 @@ void Scene::Update()
 			m_player->Die();
 		}
 	}
+
+	if (m_powerup->isactive && m_powerup->type == 2) {
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
+			
+		}
+		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+			
+		}
+	}
+	
 
 	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
