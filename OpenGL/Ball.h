@@ -18,4 +18,7 @@ public:
 	virtual void OnCollisionEnter(Pawn* _other) override;
 	void checkgate(b2Vec2 _gate, int &playerscore);
 	void Respawn();
+
+protected:
+	float directiontimer;
 };

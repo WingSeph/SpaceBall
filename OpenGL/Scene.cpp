@@ -9,8 +9,8 @@
 #include "ContactListener.h"
 #include "Dependencies/FMOD/fmod.hpp"
 
-FMOD::System* audioMgr; 
-FMOD::Sound* fxThump; 
+FMOD::System* audioMgr;
+FMOD::Sound* fxThump;
 FMOD::Sound* fxlaugh;
 FMOD::Sound* fxrespawn;
 FMOD::Sound* bgmTheme;
@@ -23,7 +23,7 @@ const bool LoadAudio() {
 	FMOD_RESULT result;
 	result = audioMgr->createSound("Resources/Sounds/SFX/WARP.wav", FMOD_DEFAULT, 0, &fxrespawn);
 	result = audioMgr->createSound("Resources/Sounds/SFX/WoahahahaYes.wav", FMOD_DEFAULT, 0, &fxlaugh);
-	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump); 
+	result = audioMgr->createSound("Resources/Sounds/SFX/DEMOLISH.wav", FMOD_DEFAULT, 0, &fxThump);
 	result = audioMgr->createSound("Resources/Sounds/Music/BGM.wav", FMOD_DEFAULT, 0, &bgmTheme);
 	bgmTheme->setMode(FMOD_LOOP_NORMAL);
 	return true;
@@ -35,7 +35,7 @@ Scene::Scene()
 {
 	m_shader = m_shaderloader.CreateProgram("Resources/Shaders/3D.vs", "Resources/Shaders/3D.fs");
 	m_camera = std::make_unique<Camera>();
-	m_timer = std::make_unique<TextLabel>("Timer", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT - 50), glm::vec3(1,1,1));
+	m_timer = std::make_unique<TextLabel>("Timer", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50), glm::vec3(1, 1, 1));
 	m_player1Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(20, WINDOW_HEIGHT - 50), glm::vec3(0, 0, 1));
 	m_player2Score = std::make_unique<TextLabel>("P2Score", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50), glm::vec3(1, 0, 0));
 
@@ -56,7 +56,7 @@ Scene::Scene()
 	m_goalR = std::make_unique<Goal>();
 	m_goalR->SetTag("Goal2");
 
-	m_powerup =	std::make_unique<PowerUp>();
+	m_powerup = std::make_unique<PowerUp>();
 
 	m_bgm = std::make_unique<Background>();
 	m_player = std::make_unique<Player>();
@@ -78,7 +78,7 @@ void Scene::Init()
 	// Creating groundbody
 	b2BodyDef bd;
 	m_worldbody = m_world.CreateBody(&bd);
-	
+
 	m_ball1->Init("Resources/Textures/meteor.png", glm::vec3(10.0f, 8.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
 	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
@@ -134,10 +134,9 @@ void Scene::Update()
 	}
 	m_goalL->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_goalR->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
-	m_player ->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+	m_player->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
-	
-	
+
 	m_powerup->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 
 	m_gametimer -= m_deltaTime;
@@ -185,13 +184,10 @@ void Scene::Update()
 
 	if (m_powerup->isactive && m_powerup->type == 2) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
-			
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
-			
 		}
 	}
-	
 
 	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
