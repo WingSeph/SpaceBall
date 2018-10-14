@@ -1,17 +1,20 @@
 #pragma once
-#include "Ball.h"
+#include "BallSplit.h"
 #include "MeshCube.h"
 #include <iostream>
+#include "Dependencies/freeglut/freeglut.h"
 
-Ball::Ball()
+BallSplit::BallSplit()
 {}
 
-Ball::~Ball()
-{}
+BallSplit::~BallSplit()
+{
+	delete this;
+}
 
 
 
-void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
+void BallSplit::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, glm::vec3 t_scale, GLuint& t_shader, bool t_isFixed, EColliderShape t_colliderShape, b2World& t_world)
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
@@ -25,23 +28,40 @@ void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 	m_sTag = "Ball";
 
 	m_physicsBody->SetLinearVelocity(b2Vec2(10, 10));
+
+	maxlifetime = 10;
+
+	timer = std::make_unique<TextLabel>("timer", "Resources/Fonts/arial.ttf", glm::vec2(t_position.x, t_position.y), glm::vec3(1, 1, 1));
 }
 
-void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
+void BallSplit::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 	if (m_physicsBody->GetLinearVelocity() == b2Vec2(0, 0))
 	{
 		m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
 	}
+
+	float currentTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
+	m_deltaTime = (currentTime - m_previousTime) * 0.001f;
+	m_previousTime = currentTime;
+
+	maxlifetime -= m_deltaTime;
+
+	if (maxlifetime <= 0) {
+		this->~BallSplit();
+	}
+
+	timer->SetPosition(glm::vec2(m_physicsBody->GetLocalCenter().x, m_physicsBody->GetLocalCenter().y));
 }
 
-void Ball::Render()
+void BallSplit::Render()
 {
 	Pawn::Render();
+	timer->Render();
 }
 
-void Ball::OnCollisionEnter(Pawn* _other)
+void BallSplit::OnCollisionEnter(Pawn* _other)
 {
 	while (m_physicsBody->GetLinearVelocity().Length() < 10)
 	{
@@ -49,7 +69,7 @@ void Ball::OnCollisionEnter(Pawn* _other)
 	}
 }
 
-void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
+void BallSplit::checkgate(b2Vec2 _gate, int &playerscore) {
 	if (b2Distance(m_physicsBody->GetWorldCenter(), _gate) < 2) {
 		playerscore++;
 		m_bIsDead = true;
@@ -60,7 +80,7 @@ void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
 	}
 }
 
-void Ball::Respawn() {
+void BallSplit::Respawn() {
 	m_bIsDead = false;
 	m_bCanRender = true;
 	m_physicsBody->SetActive(true);
