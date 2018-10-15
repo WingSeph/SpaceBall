@@ -24,7 +24,6 @@ void Player::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection,
 	float speed = 10.0f;
 	MovementChecker();
 	m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
-
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
