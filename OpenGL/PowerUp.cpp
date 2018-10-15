@@ -91,11 +91,6 @@ bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
 		break;
 
 	case POWERUP5:
-		//Invincibility
-		//player will not die
-		break;
-
-	case POWERUP6:
 		//Bomb pick up that can be dropped that will push back the player who hits it.
 		//bomb placed in front of players' shield
 		break;

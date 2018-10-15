@@ -32,7 +32,8 @@ void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 	directiontimer = directiontimer - t_deltaTime;
 	if (directiontimer < 0)
 	{
-		m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
+		//m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
+		m_physicsBody->ApplyForce(b2Vec2(rand() % 100 - 100, rand() % 100 - 100), m_physicsBody->GetLocalCenter(), true);
 		directiontimer = rand() % 10;
 	}
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
