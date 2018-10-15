@@ -14,7 +14,7 @@ Menu::~Menu()
 
 void Menu::Init()
 {
-	menu->Init("Resources/Textures/MainMenu.bmp", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), shader, true, COLLIDER_CIRCLE, m_world);
+	menu->Init("Resources/Textures/Menu2.png", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), shader, true, COLLIDER_CIRCLE, m_world);
 }
 
 void Menu::Update()
