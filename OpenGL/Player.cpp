@@ -80,6 +80,16 @@ void Player::MovementChecker()
 	}
 }
 
+float Player::GetMoveSpeed()
+{
+	return(m_fMoveSpeed);
+}
+
+void Player::SetMoveSpeed(float _fMoveSpeed)
+{
+	m_fMoveSpeed = _fMoveSpeed;
+}
+
 void Player::Die()
 {
 	m_bIsDead = true;

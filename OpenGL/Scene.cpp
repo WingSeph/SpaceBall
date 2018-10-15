@@ -81,10 +81,10 @@ void Scene::Init()
 
 	m_ball1->Init("Resources/Textures/meteor.png", glm::vec3(10.0f, 8.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
-	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 0, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_wallL->Init("Resources/Textures/Wall.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_wallR->Init("Resources/Textures/Wall.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15.25f, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, -0.25f, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallL->Init("Resources/Textures/Wall.bmp", glm::vec3(-0.25f, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_wallR->Init("Resources/Textures/Wall.bmp", glm::vec3(20.25f, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 
 	m_goalL->Init("Resources/Textures/Player1Goal.png", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/Player2Goal.png", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
@@ -189,6 +189,17 @@ void Scene::Update()
 		}
 	}
 
+	if (m_powerup->isactive && m_powerup->type == 3) {
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
+			float fSpeedOrigin = m_player->GetMoveSpeed();
+			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
+		}
+		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+			float fSpeedOrigin = m_player2->GetMoveSpeed();
+			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
+		}
+	}
+
 	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxlaugh, 0, false, &channel);
@@ -212,7 +223,7 @@ void Scene::Update()
 void Scene::Render()
 {
 	/***ONLY FOR DEBUG****/
-	//m_world.DrawDebugData();
+	m_world.DrawDebugData();
 	/***ONLY FOR DEBUG****/
 	m_bgm->Render();
 	m_ball1->Render();
