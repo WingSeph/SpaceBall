@@ -223,7 +223,7 @@ void Scene::Update()
 void Scene::Render()
 {
 	/***ONLY FOR DEBUG****/
-	m_world.DrawDebugData();
+	//m_world.DrawDebugData();
 	/***ONLY FOR DEBUG****/
 	m_bgm->Render();
 	m_ball1->Render();
