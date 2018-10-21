@@ -22,19 +22,35 @@ void Ball::Init(std::string t_filepath, glm::vec3 t_position, float t_rotation, 
 
 	m_sTag = "Ball";
 
-	m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
-
-	directiontimer = rand() % 10;
+	m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
 }
 
 void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
-	directiontimer = directiontimer - t_deltaTime;
-	if (directiontimer < 0)
+	if (m_physicsBody->GetPosition().y > 15.25f)
 	{
-		m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
-		directiontimer = rand() % 10;
+		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 0), m_physicsBody->GetAngle());
 	}
+	else if (m_physicsBody->GetPosition().y < 0)
+	{
+		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 15.25f), m_physicsBody->GetAngle());
+	}
+
+	if (m_physicsBody->GetPosition().x > 20)
+	{
+		m_physicsBody->SetTransform(b2Vec2(0, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
+	}
+	else if (m_physicsBody->GetPosition().x < 0)
+	{
+		m_physicsBody->SetTransform(b2Vec2(20, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
+	}
+
+
+	if (m_physicsBody->GetLinearVelocity().Length() < m_maxspeed)
+	{
+		m_physicsBody->ApplyForce(m_physicsBody->GetLinearVelocity(), m_physicsBody->GetLocalCenter(), true);
+	}
+
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
@@ -66,4 +82,6 @@ void Ball::Respawn() {
 	m_bIsDead = false;
 	m_bCanRender = true;
 	m_physicsBody->SetActive(true);
+	m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
+	m_physicsBody->ApplyForce(b2Vec2(0, 1), m_physicsBody->GetLocalCenter(), true);
 }
