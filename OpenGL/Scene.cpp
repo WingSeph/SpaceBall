@@ -33,6 +33,8 @@ MyContactListener g_myContactListenerInstance;
 
 Scene::Scene()
 {
+	m_world.SetContinuousPhysics(false);
+
 	m_shader = m_shaderloader.CreateProgram("Resources/Shaders/3D.vs", "Resources/Shaders/3D.fs");
 	m_camera = std::make_unique<Camera>();
 	m_timer = std::make_unique<TextLabel>("Timer", "Resources/Fonts/arial.ttf", glm::vec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50), glm::vec3(1, 1, 1));
@@ -42,13 +44,13 @@ Scene::Scene()
 	m_ball1 = std::make_unique<Ball>();
 	m_ball1->SetTag("Ball");
 
-	m_wallU = std::make_unique<Wall>();
+	//m_wallU = std::make_unique<Wall>();
 
-	m_wallD = std::make_unique<Wall>();
+	//m_wallD = std::make_unique<Wall>();
 
-	m_wallL = std::make_unique<Wall>();
+	//m_wallL = std::make_unique<Wall>();
 
-	m_wallR = std::make_unique<Wall>();
+	//m_wallR = std::make_unique<Wall>();
 
 	m_goalL = std::make_unique<Goal>();
 	m_goalL->SetTag("Goal");
@@ -81,13 +83,13 @@ void Scene::Init()
 
 	m_ball1->Init("Resources/Textures/meteor.png", glm::vec3(10.0f, 8.0f, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
 
-	m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 0, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_wallL->Init("Resources/Textures/Wall.bmp", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_wallR->Init("Resources/Textures/Wall.bmp", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	//m_wallU->Init("Resources/Textures/Wall.bmp", glm::vec3(10, 15.25f, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	//m_wallD->Init("Resources/Textures/Wall.bmp", glm::vec3(10, -0.25f, 0.0f), 0.0f, glm::vec3(10, 0.25, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	//m_wallL->Init("Resources/Textures/Wall.bmp", glm::vec3(-0.25f, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	//m_wallR->Init("Resources/Textures/Wall.bmp", glm::vec3(20.25f, 8, 0.0f), 0.0f, glm::vec3(0.25, 10, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 
-	m_goalL->Init("Resources/Textures/Player1Goal.png", glm::vec3(0, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
-	m_goalR->Init("Resources/Textures/Player2Goal.png", glm::vec3(20, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_goalL->Init("Resources/Textures/Player1Goal.png", glm::vec3(-0.5f, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	m_goalR->Init("Resources/Textures/Player2Goal.png", glm::vec3(20.5f, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 
 	m_powerup->Init("Resources/Textures/splitballpowerup.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world, 1);
 
@@ -97,10 +99,10 @@ void Scene::Init()
 	m_world.SetContactListener(&g_myContactListenerInstance);
 	m_bgm->Init("Resources/Textures/Background.bmp", glm::vec3(0.0f, 0.0f, 0.0f), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), m_shader, true, COLLIDER_CIRCLE, m_world);
 	m_bgm->GetBody()->SetActive(false);
-	m_gameobjects->push_back(std::move(m_wallU));
-	m_gameobjects->push_back(std::move(m_wallD));
-	m_gameobjects->push_back(std::move(m_wallL));
-	m_gameobjects->push_back(std::move(m_wallR));
+	//m_gameobjects->push_back(std::move(m_wallU));
+	//m_gameobjects->push_back(std::move(m_wallD));
+	//m_gameobjects->push_back(std::move(m_wallL));
+	//m_gameobjects->push_back(std::move(m_wallR));
 
 	m_world.SetDebugDraw(&m_debugDraw);
 	uint32 flags = 0;
@@ -186,6 +188,17 @@ void Scene::Update()
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+		}
+	}
+
+	if (m_powerup->isactive && m_powerup->type == 3) {
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
+			float fSpeedOrigin = m_player->GetMoveSpeed();
+			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
+		}
+		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+			float fSpeedOrigin = m_player2->GetMoveSpeed();
+			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
 		}
 	}
 

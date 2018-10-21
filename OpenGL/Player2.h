@@ -15,6 +15,9 @@ public:
 
 	void MovementChecker();
 
+	float GetMoveSpeed();
+	void SetMoveSpeed(float _fMoveSpeed);
+
 	void Die();
 
 	void Respawn();
