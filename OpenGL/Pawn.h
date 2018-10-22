@@ -13,7 +13,8 @@ enum EColliderShape
 enum PowerUpType
 {
 	POWERUP1,
-	POWERUP2
+	POWERUP2,
+	POWERUP3
 };
 
 class Pawn
