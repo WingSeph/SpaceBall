@@ -65,7 +65,10 @@ private:
 	bool m_firstrun = false;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;
-
+	float m_speedpoweruplifetimep1 = 0;
+	float m_speedpoweruplifetimep2 = 0;
+	float fSpeedOriginp1;
+	float fSpeedOriginp2;
 	int player1score = 0;
 	int player2score = 0;
 
