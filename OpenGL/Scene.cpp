@@ -91,7 +91,7 @@ void Scene::Init()
 	m_goalL->Init("Resources/Textures/Player1Goal.png", glm::vec3(-0.5f, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_goalR->Init("Resources/Textures/Player2Goal.png", glm::vec3(20.5f, 8, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
 
-	m_powerup->Init("Resources/Textures/splitballpowerup.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world, 1);
+	m_powerup->Init("Resources/Textures/PowerupBomb.png", glm::vec3(10.0f, 4.0f, 0.0f), 0.0f, glm::vec3(0.5f, 0.5f, 1.0f), m_shader, false, COLLIDER_CIRCLE, m_world, 1);
 
 	m_player->Init("Resources/Textures/ship1_blue.png", glm::vec3(6.0f, 6.0f, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
 	m_player2->Init("Resources/Textures/ship2_red.png", glm::vec3(16.0f, 6.0f, 0.0f), 200.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, m_world);
@@ -112,6 +112,8 @@ void Scene::Init()
 	flags += b2Draw::e_pairBit;
 	flags += b2Draw::e_centerOfMassBit;
 	m_debugDraw.SetFlags(flags);
+	fSpeedOriginp1 = m_player->GetMoveSpeed();
+	fSpeedOriginp2 = m_player2->GetMoveSpeed();
 }
 
 void Scene::Update()
@@ -165,6 +167,21 @@ void Scene::Update()
 
 	m_timeStep = m_deltaTime;
 
+	if (m_speedpoweruplifetimep1 > 0) {
+		m_speedpoweruplifetimep1 -= m_deltaTime;
+	}
+	if (m_speedpoweruplifetimep2 > 0) {
+		m_speedpoweruplifetimep2 -= m_deltaTime;
+	}
+
+	if (m_speedpoweruplifetimep1 <= 0) {
+		m_speedpoweruplifetimep1 = 0;
+		m_player->SetMoveSpeed(fSpeedOriginp1);
+	}
+	if (m_speedpoweruplifetimep2 <= 0) {
+		m_speedpoweruplifetimep2 = 0;
+		m_player->SetMoveSpeed(fSpeedOriginp2);
+	}
 	//powerup overlap check
 	//if (IsOverlap(m_powerup->GetBody()))
 	//{
@@ -192,13 +209,19 @@ void Scene::Update()
 	}
 
 	if (m_powerup->isactive && m_powerup->type == 3) {
+
+
+
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
-			float fSpeedOrigin = m_player->GetMoveSpeed();
+			
 			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
+
+			m_speedpoweruplifetimep1 = 4;
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
-			float fSpeedOrigin = m_player2->GetMoveSpeed();
+			
 			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
+			m_speedpoweruplifetimep2 = 4;
 		}
 	}
 

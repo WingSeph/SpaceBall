@@ -46,10 +46,10 @@ void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 	}
 
 
-	if (m_physicsBody->GetLinearVelocity().Length() < m_maxspeed)
+	/*if (m_physicsBody->GetLinearVelocity().Length() < 5)
 	{
 		m_physicsBody->ApplyForce(m_physicsBody->GetLinearVelocity(), m_physicsBody->GetLocalCenter(), true);
-	}
+	}*/
 
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
@@ -61,7 +61,7 @@ void Ball::Render()
 
 void Ball::OnCollisionEnter(Pawn* _other)
 {
-	while (m_physicsBody->GetLinearVelocity().Length() < 10)
+	while (m_physicsBody->GetLinearVelocity().Length() < 5)
 	{
 		m_physicsBody->SetLinearVelocity(b2Vec2(m_physicsBody->GetLinearVelocity().x + 1, m_physicsBody->GetLinearVelocity().y + 1));
 	}
