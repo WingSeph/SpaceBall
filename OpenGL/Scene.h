@@ -47,10 +47,10 @@ private:
 
 	std::unique_ptr<Pawn>
 		m_bgm,
-		m_wallU,
-		m_wallD,
-		m_wallL,
-		m_wallR,
+		//m_wallU,
+		//m_wallD,
+		//m_wallL,
+		//m_wallR,
 		m_goalL,
 		m_goalR;
 		
