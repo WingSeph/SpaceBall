@@ -25,13 +25,16 @@ void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 {
 	m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
 
-	lifetimer = isactive ? lifetimer -= t_deltaTime : lifetimer += t_deltaTime;
+	lifetimer = isactive ?
+		lifetimer -= t_deltaTime
+		: lifetimer += t_deltaTime;
 	if (lifetimer <= 0)
 	{
 		m_physicsBody->SetTransform(b2Vec2(rand() % 18 + 1, rand() % 13 + 1), m_physicsBody->GetAngle());
+		type = rand() % 3;
 	}
 	isactive = lifetimer <= 0 ? false : lifetimer > lifespan ? true : isactive;
-	
+
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
@@ -41,9 +44,6 @@ void PowerUp::Render()
 	{
 		Pawn::Render();
 	}
-
-
-
 }
 
 bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
@@ -54,7 +54,6 @@ bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
 
 	return false;
 }
-
 
 //void PowerUp::OnCollisionEnter(Pawn * _other)
 //{
@@ -111,6 +110,5 @@ void Player::MovementChecker()
 	direction *= 20 * PowerUpFactor;
 	m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 }
-
 
 */
