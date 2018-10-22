@@ -143,6 +143,7 @@
     <ClCompile Include="b2GLDraw.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="BallSplit.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContactListener.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="b2GLDraw.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
+    <ClInclude Include="BallSplit.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContactListener.h" />
     <ClInclude Include="Enemy.h" />
