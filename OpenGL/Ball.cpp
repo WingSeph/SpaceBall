@@ -45,12 +45,6 @@ void Ball::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 		m_physicsBody->SetTransform(b2Vec2(20, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
 	}
 
-
-	/*if (m_physicsBody->GetLinearVelocity().Length() < 5)
-	{
-		m_physicsBody->ApplyForce(m_physicsBody->GetLinearVelocity(), m_physicsBody->GetLocalCenter(), true);
-	}*/
-
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
@@ -73,7 +67,7 @@ void Ball::checkgate(b2Vec2 _gate, int &playerscore) {
 		m_bIsDead = true;
 		m_bCanRender = false;
 		m_physicsBody->SetTransform(b2Vec2(10.0f, 8.0f), m_physicsBody->GetAngle());
-		m_physicsBody->SetLinearVelocity(b2Vec2(10, 10));
+		m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
 		m_physicsBody->SetActive(false);
 	}
 }
