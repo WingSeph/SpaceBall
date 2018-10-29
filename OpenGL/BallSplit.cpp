@@ -9,7 +9,6 @@ BallSplit::BallSplit()
 
 BallSplit::~BallSplit()
 {
-	delete this;
 }
 
 
@@ -36,29 +35,38 @@ void BallSplit::Init(std::string t_filepath, glm::vec3 t_position, float t_rotat
 
 void BallSplit::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
-	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
-	if (m_physicsBody->GetLinearVelocity() == b2Vec2(0, 0))
+	if (m_physicsBody->GetPosition().y > 15.25f)
 	{
-		m_physicsBody->SetLinearVelocity(b2Vec2(rand() % 10 - 5, rand() % 10 - 5));
+		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 0), m_physicsBody->GetAngle());
+	}
+	else if (m_physicsBody->GetPosition().y < 0)
+	{
+		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 15.25f), m_physicsBody->GetAngle());
 	}
 
-	float currentTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
-	m_deltaTime = (currentTime - m_previousTime) * 0.001f;
-	m_previousTime = currentTime;
-
-	maxlifetime -= m_deltaTime;
-
-	if (maxlifetime <= 0) {
-		this->~BallSplit();
+	if (m_physicsBody->GetPosition().x > 20)
+	{
+		m_physicsBody->SetTransform(b2Vec2(0, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
+	}
+	else if (m_physicsBody->GetPosition().x < 0)
+	{
+		m_physicsBody->SetTransform(b2Vec2(20, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
 	}
 
-	timer->SetPosition(glm::vec2(m_physicsBody->GetLocalCenter().x, m_physicsBody->GetLocalCenter().y));
+
+
+	maxlifetime = maxlifetime - 0.1f * t_deltaTime;
+
+
+	timer->SetPosition(glm::vec2(m_physicsBody->GetWorldPoint(m_physicsBody->GetLocalCenter()).x, m_physicsBody->GetWorldPoint(m_physicsBody->GetLocalCenter()).y));
+	timer->SetText(std::to_string(maxlifetime));
+	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
 void BallSplit::Render()
 {
 	Pawn::Render();
-	timer->Render();
+	//timer->Render();
 }
 
 void BallSplit::OnCollisionEnter(Pawn* _other)

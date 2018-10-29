@@ -13,7 +13,7 @@ void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 {
 	m_mesh = std::make_unique<Mesh>(t_filepath, t_shader);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, t_isFixed, t_colliderShape, t_world);
-
+	m_shader = t_shader;
 	lifespan = 3.0f;
 	lifetimer = 0.0f;
 	isactive = false;
@@ -31,7 +31,17 @@ void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 	if (lifetimer <= 0)
 	{
 		m_physicsBody->SetTransform(b2Vec2(rand() % 18 + 1, rand() % 13 + 1), m_physicsBody->GetAngle());
-		type = rand() % 3;
+		type = rand() % 3 + 1;
+
+		if (type == 1) {
+			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupBomb.png", m_shader);
+		}
+		else if (type == 2) {
+			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupMultiball.png", m_shader);
+		}
+		else if (type == 3) {
+			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupSpeed.png", m_shader);
+		}
 	}
 	isactive = lifetimer <= 0 ? false : lifetimer > lifespan ? true : isactive;
 
@@ -47,6 +57,7 @@ void PowerUp::Render()
 }
 
 bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
+
 	if (b2Distance(m_physicsBody->GetWorldCenter(), _player->GetWorldCenter()) < 1) {
 		isactive = false;
 		return true;

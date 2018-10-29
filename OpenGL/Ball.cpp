@@ -85,3 +85,4 @@ void Ball::Respawn() {
 	m_physicsBody->SetLinearVelocity(b2Vec2(0, 0));
 	m_physicsBody->ApplyForce(b2Vec2(0, 1), m_physicsBody->GetLocalCenter(), true);
 }
+

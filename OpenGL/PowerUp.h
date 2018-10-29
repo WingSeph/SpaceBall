@@ -20,7 +20,7 @@ public:
 protected:
 	float lifespan;
 	float lifetimer;
-	
+	GLuint m_shader;
 
 	glm::vec2 spawnpoint;
 };
