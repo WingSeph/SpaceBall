@@ -284,13 +284,15 @@ void Scene::Update()
 
 	if (m_ballsplits.size() > 0) {
 		for (int i = 0; i < m_ballsplits.size(); i++) {
-			if (m_ballsplits.at(i)->maxlifetime <= 0) {
-				m_ballsplits.clear();
-			}
+
 			if (m_ballsplits.at(i)->IsDead()) {
 				FMOD::Channel* channel;
 				audioMgr->playSound(fxlaugh, 0, false, &channel);
 				m_ballsplits.at(i)->Respawn();
+			}
+			if (m_ballsplits.at(i)->maxlifetime <= 0) {
+				m_ballsplits.clear();
+				break;
 			}
 		}
 	}
