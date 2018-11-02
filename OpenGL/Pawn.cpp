@@ -70,7 +70,6 @@ void Pawn::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, g
 		m_physicsBody->SetTransform(b2Vec2(m_location.x, m_location.y), m_fRotation);
 	}
 
-	//scale =
 	m_mesh->Update
 	(
 		t_projection,
