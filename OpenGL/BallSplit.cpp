@@ -58,15 +58,15 @@ void BallSplit::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projecti
 	maxlifetime = maxlifetime - 1 * t_deltaTime;
 
 
-	timer->SetPosition(glm::vec2(m_physicsBody->GetWorldPoint(m_physicsBody->GetLocalCenter()).x, m_physicsBody->GetWorldPoint(m_physicsBody->GetLocalCenter()).y));
-	timer->SetText(std::to_string(maxlifetime));
+	/*timer->SetPosition(glm::vec2(m_physicsBody->GetWorldPoint(m_physicsBody->GetLocalCenter()).x, m_physicsBody->GetWorldPoint(m_physicsBody->GetLocalCenter()).y));
+	timer->SetText(std::to_string(maxlifetime));*/
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 
 void BallSplit::Render()
 {
 	Pawn::Render();
-	timer->Render();
+	//timer->Render();
 }
 
 void BallSplit::OnCollisionEnter(Pawn* _other)

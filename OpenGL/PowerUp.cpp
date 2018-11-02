@@ -23,6 +23,7 @@ void PowerUp::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 
 void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
+	m_physicsBody->SetAwake(isactive);
 	m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
 
 	lifetimer = isactive ?
@@ -30,9 +31,10 @@ void PowerUp::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection
 		: lifetimer += t_deltaTime;
 	if (lifetimer <= 0)
 	{
-		m_physicsBody->SetTransform(b2Vec2(rand() % 18 + 1, rand() % 13 + 1), m_physicsBody->GetAngle());
-		type = rand() % 3 + 1;
-
+		for (int i = 0; i < 3; i++) {
+			m_physicsBody->SetTransform(b2Vec2(rand() % 18 + 1, rand() % 13 + 1), m_physicsBody->GetAngle());
+			type = rand() % 3 + 1;
+		}
 		if (type == 1) {
 			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupBomb.png", m_shader);
 		}
@@ -60,6 +62,8 @@ bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
 
 	if (b2Distance(m_physicsBody->GetWorldCenter(), _player->GetWorldCenter()) < 1) {
 		isactive = false;
+		lifetimer = 0;
+		m_physicsBody->SetTransform(b2Vec2(rand() % 18 + 1, rand() % 13 + 1), m_physicsBody->GetAngle());
 		return true;
 	}
 
