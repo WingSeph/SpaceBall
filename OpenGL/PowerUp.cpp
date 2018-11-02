@@ -64,6 +64,20 @@ bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
 		isactive = false;
 		lifetimer = 0;
 		m_physicsBody->SetTransform(b2Vec2(rand() % 18 + 1, rand() % 13 + 1), m_physicsBody->GetAngle());
+
+		type = rand() % 3 + 1;
+
+		if (type == 1) {
+			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupBomb.png", m_shader);
+		}
+		else if (type == 2) {
+			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupMultiball.png", m_shader);
+		}
+		else if (type == 3) {
+			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupSpeed.png", m_shader);
+		}
+
+
 		return true;
 	}
 
