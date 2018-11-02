@@ -65,6 +65,8 @@ Scene::Scene()
 	m_player2 = std::make_unique<Player2>();
 
 	m_gameobjects = std::make_unique<std::vector<std::unique_ptr<Pawn>>>();
+
+	m_ballsplits = std::vector<BallSplit*>();
 }
 
 Scene::~Scene()
@@ -129,6 +131,14 @@ void Scene::Update()
 	m_previousTime = currentTime;
 
 	m_ball1->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+
+	if (m_ballsplits.size() > 0) {
+		for (auto&& ball : m_ballsplits) {
+			ball->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+		}
+	}
+	
+
 	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)
@@ -192,19 +202,44 @@ void Scene::Update()
 	m_ball1->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
 	m_ball1->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
 
+	if (m_ballsplits.size() > 0) {
+		for (auto&& ball : m_ballsplits) {
+			ball->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
+			ball->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
+		}
+	}
+
 	if (m_powerup->isactive && m_powerup->type == 1) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
 			m_player2->Die();
+			m_powerup->isactive = false;
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
 			m_player->Die();
+			m_powerup->isactive = false;
 		}
 	}
 
 	if (m_powerup->isactive && m_powerup->type == 2) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
+
+			m_splitball = new BallSplit();
+			m_splitball->SetTag("SplitBall");
+			m_splitball->Init("Resources/Textures/meteor.png", glm::vec3(m_ball1->GetLocation().x, m_ball1->GetLocation().y, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
+			m_splitball->GetBody()->ApplyForce(b2Vec2(m_ball1->GetBody()->GetLinearVelocity().x, m_ball1->GetBody()->GetLinearVelocity().y + 1), m_ball1->GetBody()->GetWorldCenter(), true);
+			m_splitball->maxlifetime = 10;
+			m_ballsplits.push_back(m_splitball);
+			m_powerup->isactive = false;
+
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+			m_splitball = new BallSplit();
+			m_splitball->SetTag("SplitBall");
+			m_splitball->Init("Resources/Textures/meteor.png", glm::vec3(m_ball1->GetLocation().x, m_ball1->GetLocation().y, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
+			m_splitball->GetBody()->ApplyForce(b2Vec2(m_ball1->GetBody()->GetLinearVelocity().x, m_ball1->GetBody()->GetLinearVelocity().y + 1), m_ball1->GetBody()->GetWorldCenter(), true);
+			m_splitball->maxlifetime = 10;
+			m_ballsplits.push_back(m_splitball);
+			m_powerup->isactive = false;
 		}
 	}
 
@@ -217,11 +252,13 @@ void Scene::Update()
 			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
 
 			m_speedpoweruplifetimep1 = 4;
+			m_powerup->isactive = false;
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
 			
 			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
 			m_speedpoweruplifetimep2 = 4;
+			m_powerup->isactive = false;
 		}
 	}
 
@@ -243,6 +280,22 @@ void Scene::Update()
 
 	m_player->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 	m_player2->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
+
+
+	if (m_ballsplits.size() > 0) {
+		for (int i = 0; i < m_ballsplits.size(); i++) {
+
+			if (m_ballsplits.at(i)->IsDead()) {
+				FMOD::Channel* channel;
+				audioMgr->playSound(fxlaugh, 0, false, &channel);
+				m_ballsplits.at(i)->Respawn();
+			}
+			if (m_ballsplits.at(i)->maxlifetime <= 0) {
+				m_ballsplits.clear();
+				break;
+			}
+		}
+	}
 }
 
 void Scene::Render()
@@ -291,6 +344,12 @@ void Scene::Render()
 	{
 		m_powerup->Render();
 	}
+	if (m_ballsplits.size() > 0) {
+		for (auto&& ball : m_ballsplits) {
+			ball->Render();
+		}
+	}
+	
 }
 
 void Scene::DeletionCheck()

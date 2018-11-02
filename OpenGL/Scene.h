@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Player2.h"
 #include "Ball.h"
+#include "BallSplit.h"
 #include "TextLabel.h"
 #include "PowerUp.h"
 
@@ -43,6 +44,7 @@ private:
 	std::unique_ptr<Ball> m_ball1;
 
 	std::unique_ptr<PowerUp> m_powerup;
+	BallSplit *m_splitball;
 
 
 	std::unique_ptr<Pawn>
@@ -56,6 +58,8 @@ private:
 		
 
 	std::unique_ptr<std::vector<std::unique_ptr<Pawn>>> m_gameobjects;
+
+	std::vector<BallSplit*> m_ballsplits;
 
 	std::unique_ptr<TextLabel> m_timer, m_player1Score, m_player2Score;
 

@@ -16,7 +16,7 @@ void Player2::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 
 	m_physicsBody->SetBullet(true);
 	m_physicsBody->GetFixtureList()->SetRestitution(1.0f);
-	m_physicsBody->SetLinearDamping(0.8f);
+	m_physicsBody->SetLinearDamping(4.0f);
 	m_physicsBody->SetAngularDamping(2.0f);
 }
 
