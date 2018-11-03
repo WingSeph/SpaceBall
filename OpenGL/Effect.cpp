@@ -3,7 +3,7 @@
 
 Effect::Effect()
 {
-	duration = 3.0f;
+	duration = 1.0f;
 }
 
 Effect::~Effect()
@@ -33,7 +33,7 @@ void Effect::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection,
 {
 	duration = duration - t_deltaTime;
 	SetRotation(GetRotation() + (t_deltaTime * 500));
-	SetScale(m_scale + (t_deltaTime * .3f));
+	//SetScale(m_scale + (t_deltaTime * .3f));
 	Pawn::Update(t_deltaTime, t_view, t_projection, t_cameraPos);
 }
 

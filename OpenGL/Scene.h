@@ -29,6 +29,8 @@ public:
 	int WhoWon();
 
 	void CreateAnimationEffect(b2Vec2 t_location);
+	void CreateAnimationEffect(b2Vec2 t_location, float duration);
+	void CreateAnimationEffect(b2Vec2 t_location, float duration, std::string filepath);
 
 private:
 	ShaderLoader m_shaderloader;
