@@ -22,4 +22,6 @@ private:
 
 	b2World m_world = b2World(b2Vec2(0, 0));
 	b2Body* m_worldbody;
+
+	int m_iCurrMenuSelection = 0;
 };
