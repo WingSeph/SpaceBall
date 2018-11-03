@@ -270,6 +270,8 @@ void Scene::Update()
 				effect->Update(m_deltaTime, m_camera->GetView(), m_camera->GetProjection(), m_camera->GetLocation());
 				if (effect->duration <= 0) {
 					delete effect;
+					effect = nullptr;
+					m_effects.clear();
 				}
 			}
 		}
@@ -283,7 +285,16 @@ void Scene::Render()
 	/***ONLY FOR DEBUG****/
 
 	m_bgm->Render();
+	if (m_effects.size() > 0) {
+		for (auto&& effect : m_effects) {
+			if (effect) {
+				effect->Render();
+			}
+		}
+	}
+
 	m_ball1->Render();
+
 	for (auto&& pawn : *m_gameobjects)
 	{
 		if (pawn)
@@ -326,13 +337,6 @@ void Scene::Render()
 	if (m_ballsplits.size() > 0) {
 		for (auto&& ball : m_ballsplits) {
 			ball->Render();
-		}
-	}
-	if (m_effects.size() > 0) {
-		for (auto&& effect : m_effects) {
-			if (effect) {
-				effect->Render();
-			}
 		}
 	}
 }
@@ -383,6 +387,6 @@ int Scene::WhoWon()
 
 void Scene::CreateAnimationEffect(b2Vec2 t_location) {
 	auto effect = new Effect();
-	effect->Init("Resources/Textures/Player1Goal.png", glm::vec3(t_location.x, t_location.y, 0.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), m_shader, true, COLLIDER_SQUARE, m_world);
+	effect->Init("Resources/Textures/Player1Goal.png", glm::vec3(t_location.x, t_location.y, 0), 0.0f, glm::vec3(.1, .1, 0), m_shader, true, COLLIDER_SQUARE, m_world);
 	m_effects.push_back(effect);
 }
