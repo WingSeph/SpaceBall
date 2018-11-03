@@ -146,6 +146,7 @@
     <ClCompile Include="BallSplit.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContactListener.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Goal.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="BallSplit.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContactListener.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="glext.h" />

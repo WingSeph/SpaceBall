@@ -1,5 +1,4 @@
 #include "PowerUp.h"
-//#include <iostream>
 
 PowerUp::PowerUp()
 {
@@ -59,7 +58,6 @@ void PowerUp::Render()
 }
 
 bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
-
 	if (b2Distance(m_physicsBody->GetWorldCenter(), _player->GetWorldCenter()) < 1) {
 		isactive = false;
 		lifetimer = 0;
@@ -77,21 +75,11 @@ bool PowerUp::CheckCollisionOnplayer(b2Body* _player) {
 			m_mesh = std::make_unique<Mesh>("Resources/Textures/PowerupSpeed.png", m_shader);
 		}
 
-
 		return true;
 	}
 
 	return false;
 }
-
-//void PowerUp::OnCollisionEnter(Pawn * _other)
-//{
-//	//powerup disappears
-//	m_bIsDead = true;
-//
-//	//otherpawn gets powerup
-//	_other->SetPowerUp(true, POWERUP1);
-//}
 
 /*
 
