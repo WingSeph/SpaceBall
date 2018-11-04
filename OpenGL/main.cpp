@@ -9,39 +9,27 @@
 #include "Dependencies/Box2D/Box2D.h"
 
 std::unique_ptr<Menu> menu;
-std::unique_ptr<Scene> scene;
+std::unique_ptr<Scene> game;
 std::unique_ptr<GameOver> gameover;
 
-GameState gamestate = MENU;
-
-bool MenuButtons()
-{
-	// 'e' = EXIT
-	if (GetButtonDown('e'))
-	{
-		exit(0);
-	}
-	// 'g' = MENU
-	if (GetButtonDown('g'))
-	{
-		return true;
-	}
-	return false;
-}
+GameState g_currentScene = MENU;
 
 void Init()
 {
 	gameover = std::make_unique<GameOver>();
-	switch (gamestate)
+	switch (g_currentScene)
 	{
 	case MENU:
 		menu = std::make_unique<Menu>();
 		menu->Init();
 		break;
 
-	case SCENE:
-		scene = std::make_unique<Scene>();
-		scene->Init();
+	case GAME:
+		game = std::make_unique<Scene>();
+		game->Init();
+		break;
+
+	case HOWTOPLAY:
 		break;
 
 	case GAMEOVER:
@@ -55,18 +43,21 @@ void Init()
 void Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(1.0, 1.0, 1.0, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 
-	switch (gamestate)
+	switch (g_currentScene)
 	{
 	case MENU:
 		menu->Render();
 		break;
-	case SCENE:
-		scene->Render();
+	case GAME:
+		game->Render();
+		g_currentScene = game->GetCurrentScene();
+		break;
+	case HOWTOPLAY:
 		break;
 	case GAMEOVER:
 		gameover->Render();
@@ -79,23 +70,23 @@ void Render()
 
 void Update()
 {
-	switch (gamestate)
+	switch (g_currentScene)
 	{
 	case MENU:
 		menu->Update();
-		if (MenuButtons() == true)
+		if (!menu->IsActive())
 		{
-			gamestate = SCENE;
+			g_currentScene = GAME;
 			Init();
 		}
 		break;
 
-	case SCENE:
-		scene->Update();
-		if (scene->GameOver() == true)
+	case GAME:
+		game->Update();
+		if (game->GameOver() == true)
 		{
-			gamestate = GAMEOVER;
-			switch (scene->WhoWon())
+			g_currentScene = GAMEOVER;
+			switch (game->WhoWon())
 			{
 			case 1:
 				gameover->Init(1);
@@ -110,13 +101,17 @@ void Update()
 				break;
 			}
 		}
+		g_currentScene = game->GetCurrentScene();
+		break;
+
+	case HOWTOPLAY:
 		break;
 
 	case GAMEOVER:
 		gameover->Update();
-		if (MenuButtons() == true)
+		if (!gameover->IsActive())
 		{
-			gamestate = SCENE;
+			g_currentScene = GAME;
 			Init();
 		}
 		break;
