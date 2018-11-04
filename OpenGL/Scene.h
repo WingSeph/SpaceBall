@@ -32,6 +32,9 @@ public:
 	void CreateAnimationEffect(b2Vec2 t_location, float duration);
 	void CreateAnimationEffect(b2Vec2 t_location, float duration, std::string filepath);
 
+	GameState GetCurrentScene();
+	void SetCurrentScene(GameState _state);
+
 private:
 	ShaderLoader m_shaderloader;
 	GLuint m_shader;
@@ -74,4 +77,6 @@ private:
 	int32 m_velocityInterations = 10;
 	int32 m_positionIterations = 8;
 	b2GLDraw m_debugDraw;
+
+	GameState m_currentScene;
 };
