@@ -14,8 +14,6 @@ public:
 	virtual void Update();
 	virtual void Render();
 
-	bool IsActive();
-
 private:
 	ShaderLoader shaderloader;
 	GLuint shader;
@@ -29,5 +27,4 @@ private:
 	int player1score = 0;
 	int player2score = 0;
 
-	bool m_bIsActive;
 };

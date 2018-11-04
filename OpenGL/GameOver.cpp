@@ -14,8 +14,6 @@ GameOver::~GameOver()
 
 void GameOver::Init(int winner)
 {
-	m_bIsActive = true;
-
 	switch (winner)
 	{
 	case 1:
@@ -43,9 +41,4 @@ void GameOver::Render()
 	text->Render();
 	gameover->Render();
 
-}
-
-bool GameOver::IsActive()
-{
-	return m_bIsActive;
 }

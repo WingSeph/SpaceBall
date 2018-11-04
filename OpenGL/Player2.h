@@ -1,8 +1,8 @@
 #pragma once
 #include "Pawn.h"
-#include "Input.h"
+#include "PlayerShield.h"
 
-class Player2 : public Pawn, CInput
+class Player2 : public Pawn
 {
 public:
 	Player2();
