@@ -288,11 +288,6 @@ void Scene::Update()
 			}
 		}
 	}
-
-	if (GameOver())
-	{
-		m_currentScene = GameState::GAMEOVER;
-	}
 }
 
 void Scene::Render()
@@ -355,6 +350,11 @@ void Scene::Render()
 		for (auto&& ball : m_ballsplits) {
 			ball->Render();
 		}
+	}
+
+	if (GameOver())
+	{
+		m_currentScene = GameState::GAMEOVER;
 	}
 }
 

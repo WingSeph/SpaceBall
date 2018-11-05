@@ -58,7 +58,7 @@ private:
 
 	std::unique_ptr<TextLabel> m_timer, m_player1Score, m_player2Score;
 
-	float m_gametimer = 5;
+	float m_gametimer = 60;
 	float m_player1respawn = 0;
 	float m_player2respawn = 0;
 	bool m_firstrun = false;

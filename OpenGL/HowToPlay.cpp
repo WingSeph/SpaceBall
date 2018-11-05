@@ -18,7 +18,7 @@ HowToPlay::~HowToPlay()
 
 void HowToPlay::Init()
 {
-	controls->Init("Resources/Textures/Menu.png", glm::vec3(0, 0, 0), 200.0f, glm::vec3(10.0f, 5.0f, 10.0f), shader, true, COLLIDER_CIRCLE, m_world);
+	controls->Init("Resources/Textures/Menu.png", glm::vec3(0, 0, 0), 200.0f, glm::vec3(10.0f, 10.0f, 10.0f), shader, true, COLLIDER_CIRCLE, m_world);
 	SetCurrentScene(GameState::HOWTOPLAY);
 }
 
