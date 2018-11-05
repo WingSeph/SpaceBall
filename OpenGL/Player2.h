@@ -15,10 +15,13 @@ public:
 
 	void MovementChecker();
 
+	float GetMoveSpeed();
+	void SetMoveSpeed(float _fMoveSpeed);
+
 	void Die();
 
 	void Respawn();
 
 private:
-	float m_fMoveSpeed = 10.0f;
+	float m_fMoveSpeed = 40.0f;
 };

@@ -13,10 +13,33 @@ void Player2::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 {
 	m_mesh = std::make_unique<MeshCube>(t_filepath, t_shader);
 	Pawn::Init(t_filepath, t_position, t_rotation, t_scale, t_shader, false, COLLIDER_CIRCLE, t_world);
+
+	m_physicsBody->SetBullet(true);
+	m_physicsBody->GetFixtureList()->SetRestitution(1.0f);
+	m_physicsBody->SetLinearDamping(4.0f);
+	m_physicsBody->SetAngularDamping(2.0f);
 }
 
 void Player2::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
+	if (m_physicsBody->GetPosition().y > 15.25f)
+	{
+		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 0), m_physicsBody->GetAngle());
+	}
+	else if (m_physicsBody->GetPosition().y < 0)
+	{
+		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 15.25f), m_physicsBody->GetAngle());
+	}
+
+	if (m_physicsBody->GetPosition().x > 20)
+	{
+		m_physicsBody->SetTransform(b2Vec2(0, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
+	}
+	else if (m_physicsBody->GetPosition().x < 0)
+	{
+		m_physicsBody->SetTransform(b2Vec2(20, m_physicsBody->GetPosition().y), m_physicsBody->GetAngle());
+	}
+
 	float speed = 10.0f;
 	MovementChecker();
 	//m_location = glm::vec3(m_physicsBody->GetPosition().x, m_physicsBody->GetPosition().y, 0);
@@ -31,11 +54,6 @@ void Player2::Render()
 
 void Player2::MovementChecker()
 {
-	m_physicsBody->SetBullet(true);
-	m_physicsBody->GetFixtureList()->SetRestitution(1.0f);
-	m_physicsBody->SetLinearDamping(0.8f);
-	m_physicsBody->SetAngularDamping(2.0f);
-
 	//'w' = Up
 	if (GetButtonDown('i'))
 	{
@@ -77,6 +95,16 @@ void Player2::MovementChecker()
 		direction *= m_fMoveSpeed;
 		m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 	}
+}
+
+float Player2::GetMoveSpeed()
+{
+	return(m_fMoveSpeed);
+}
+
+void Player2::SetMoveSpeed(float _fMoveSpeed)
+{
+	m_fMoveSpeed = _fMoveSpeed;
 }
 
 void Player2::Die()

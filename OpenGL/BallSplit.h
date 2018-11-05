@@ -7,8 +7,7 @@
 
 class Camera;
 
-class BallSplit :
-	public Pawn
+class BallSplit : public Pawn
 {
 public:
 	BallSplit();
@@ -22,7 +21,7 @@ public:
 
 	std::unique_ptr<TextLabel> timer;
 
-	int maxlifetime;
+	float maxlifetime;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;
 };
