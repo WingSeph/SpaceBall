@@ -31,6 +31,7 @@ public:
 	void CreateAnimationEffect(b2Vec2 t_location);
 	void CreateAnimationEffect(b2Vec2 t_location, float duration);
 	void CreateAnimationEffect(b2Vec2 t_location, float duration, std::string filepath);
+	void CreateAnimationEffect(glm::vec2 t_location, float duration, std::string filepath);
 
 	GameState GetCurrentScene();
 	void SetCurrentScene(GameState _state);

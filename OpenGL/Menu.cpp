@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Input.h"
 
 Menu::Menu()
 {
@@ -26,7 +27,7 @@ void Menu::Update()
 {
 	m_world.Step(1 / 60, 6, 2);
 
-	if (CInput::GetButtonDown('s') || CInput::GetButtonDown('k'))
+	if (GetButtonDown('s') || GetButtonDown('k'))
 	{
 		if (m_iCurrMenuSelection == 2)
 		{
@@ -37,7 +38,7 @@ void Menu::Update()
 			m_iCurrMenuSelection++;
 		}
 	}
-	if (CInput::GetButtonDown('w') || CInput::GetButtonDown('i'))
+	if (GetButtonDown('w') || GetButtonDown('i'))
 	{
 		if (m_iCurrMenuSelection == 0)
 		{
@@ -90,7 +91,6 @@ void Menu::Update()
 
 void Menu::Render()
 {
-	//menu->Render();
 	m_titleText->Render();
 	m_playButtonText->Render();
 	m_howToPlayButtonText->Render();

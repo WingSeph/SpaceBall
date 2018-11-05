@@ -141,7 +141,7 @@ void Scene::Update()
 		if (m_player1respawn <= 0) {
 			FMOD::Channel* channel;
 			audioMgr->playSound(fxrespawn, 0, false, &channel);
-			CreateAnimationEffect(m_player->GetBody()->GetPosition());						//effect
+			CreateAnimationEffect(m_player->GetBody()->GetPosition(), 0.5f, "Resources/Textures/laserBlue08.png");				//effect
 			m_player->Respawn();
 		}
 	}
@@ -150,7 +150,7 @@ void Scene::Update()
 		if (m_player2respawn <= 0) {
 			FMOD::Channel* channel;
 			audioMgr->playSound(fxrespawn, 0, false, &channel);
-			CreateAnimationEffect(m_player2->GetBody()->GetPosition());						//effect
+			CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 0.5f, "Resources/Textures/laserRed08.png");				//effect
 			m_player2->Respawn();
 		}
 	}
@@ -178,26 +178,31 @@ void Scene::Update()
 	}
 
 	m_world.Step(m_timeStep, m_velocityInterations, m_positionIterations);
+					
+	int checkscorep1 = player1score;															//check scores
+	int checkscorep2 = player2score;
 	m_ball1->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
 	m_ball1->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
-
 	if (m_ballsplits.size() > 0) {
 		for (auto&& ball : m_ballsplits) {
 			ball->checkgate(m_goalL->GetBody()->GetWorldCenter(), player2score);
 			ball->checkgate(m_goalR->GetBody()->GetWorldCenter(), player1score);
 		}
 	}
+	if (checkscorep1 != player1score) {
+		CreateAnimationEffect(m_player->GetBody()->GetPosition(), 1.0f, "Resources/Textures/star_gold.png");
+	}
+	if (checkscorep2 != player2score) {
+		CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 1.0f, "Resources/Textures/star_silver.png");
+	}
+
 
 	if (m_powerup->isactive && m_powerup->type == 1) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
-			CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
-			CreateAnimationEffect(m_player2->GetBody()->GetPosition());						//effect
 			m_player2->Die();
 			m_powerup->isactive = false;
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
-			CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
-			CreateAnimationEffect(m_player->GetBody()->GetPosition());						//effect
 			m_player->Die();
 			m_powerup->isactive = false;
 		}
@@ -205,7 +210,7 @@ void Scene::Update()
 
 	if (m_powerup->isactive && m_powerup->type == 2) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
-			CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
+			CreateAnimationEffect(m_player->GetBody()->GetPosition(), 1.5f, "Resources/Textures/things_silver.png");				//effect
 			m_splitball = new BallSplit();
 			m_splitball->SetTag("SplitBall");
 			m_splitball->Init("Resources/Textures/meteor.png", glm::vec3(m_ball1->GetLocation().x, m_ball1->GetLocation().y, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
@@ -215,7 +220,7 @@ void Scene::Update()
 			m_powerup->isactive = false;
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
-			CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
+			CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 1.5f, "Resources/Textures/things_silver.png");				//effect
 			m_splitball = new BallSplit();
 			m_splitball->SetTag("SplitBall");
 			m_splitball->Init("Resources/Textures/meteor.png", glm::vec3(m_ball1->GetLocation().x, m_ball1->GetLocation().y, 0.0f), 0.0f, glm::vec3(0.35, 0.35, 1), m_shader, false, COLLIDER_CIRCLE, m_world);
@@ -228,15 +233,14 @@ void Scene::Update()
 
 	if (m_powerup->isactive && m_powerup->type == 3) {
 		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
-			CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
 			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
-
+			CreateAnimationEffect(m_player->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
 			m_speedpoweruplifetimep1 = 4;
 			m_powerup->isactive = false;
 		}
 		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
-			CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
 			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
+			CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
 			m_speedpoweruplifetimep2 = 4;
 			m_powerup->isactive = false;
 		}
@@ -245,7 +249,6 @@ void Scene::Update()
 	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxlaugh, 0, false, &channel);
-		CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
 		m_ball1->Respawn();
 	}
 
@@ -265,7 +268,6 @@ void Scene::Update()
 	if (m_ballsplits.size() > 0) {
 		for (int i = 0; i < m_ballsplits.size(); i++) {
 			if (m_ballsplits.at(i)->IsDead()) {
-				CreateAnimationEffect(m_powerup->GetBody()->GetPosition());						//effect
 				FMOD::Channel* channel;
 				audioMgr->playSound(fxlaugh, 0, false, &channel);
 				m_ballsplits.at(i)->Respawn();
@@ -363,7 +365,7 @@ void Scene::DeletionCheck()
 	if (m_player != nullptr && m_player->IsDead() && m_player1respawn <= 0)
 	{
 		//m_player = nullptr;
-		CreateAnimationEffect(m_player->GetBody()->GetPosition());						//effect
+		CreateAnimationEffect(m_player->GetBody()->GetPosition(), 0.5f, "Resources/Textures/playerShip1_damage3.png");				//effect
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxThump, 0, false, &channel);
 		m_player1respawn = 5;
@@ -372,7 +374,7 @@ void Scene::DeletionCheck()
 	if (m_player != nullptr && m_player2->IsDead() && m_player2respawn <= 0)
 	{
 		//m_player2 = nullptr;
-		CreateAnimationEffect(m_player2->GetBody()->GetPosition());						//effect
+		CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 0.5f, "Resources/Textures/playerShip2_damage3.png");				//effect
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxThump, 0, false, &channel);
 		m_player2respawn = 5;
@@ -417,6 +419,13 @@ void Scene::CreateAnimationEffect(b2Vec2 t_location, float duration) {
 }
 
 void Scene::CreateAnimationEffect(b2Vec2 t_location, float duration, std::string filepath) {
+	auto effect = new Effect();
+	effect->Init(filepath, glm::vec3(t_location.x, t_location.y, 0), 0.0f, glm::vec3(1, 1, 0), m_shader, true, COLLIDER_SQUARE, m_world);
+	effect->duration = duration;
+	m_effects.push_back(effect);
+}
+
+void Scene::CreateAnimationEffect(glm::vec2 t_location, float duration, std::string filepath) {
 	auto effect = new Effect();
 	effect->Init(filepath, glm::vec3(t_location.x, t_location.y, 0), 0.0f, glm::vec3(1, 1, 0), m_shader, true, COLLIDER_SQUARE, m_world);
 	effect->duration = duration;
