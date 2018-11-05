@@ -3,35 +3,33 @@
 #include "Background.h"
 #include "Input.h"
 #include "Utilities.h"
+#include "Pawn.h"
 
-
-class GameOver :
-	public Scene, CInput
+class HowToPlay : public Scene, CInput
 {
 public:
-	GameOver();
-	~GameOver();
+	HowToPlay();
+	~HowToPlay();
 
-	virtual void Init(int winner);
+	virtual void Init();
 	virtual void Update();
 	virtual void Render();
 
 private:
 	ShaderLoader shaderloader;
 	GLuint shader;
+	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<Camera> camera;
-	std::unique_ptr<TextLabel> text;
-	std::unique_ptr<Background> gameover;
-
-	TextLabel* m_titleText;
-	TextLabel* m_retryButtonText;
-	TextLabel* m_quitButtonText;
+	std::unique_ptr<Background> controls;
 
 	b2World m_world = b2World(b2Vec2(0, 0));
 	b2Body* m_worldbody;
 
-	int player1score = 0;
-	int player2score = 0;
-	
+	TextLabel* m_titleText;
+	TextLabel* m_backButtonText;
+
+	float m_deltaTime = 0;
+	float m_previousTime = 0;
+
 	int m_iCurrMenuSelection;
 };

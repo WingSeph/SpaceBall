@@ -150,6 +150,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Goal.cpp" />
+    <ClCompile Include="HowToPlay.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="glext.h" />
     <ClInclude Include="Goal.h" />
+    <ClInclude Include="HowToPlay.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Mesh.h" />

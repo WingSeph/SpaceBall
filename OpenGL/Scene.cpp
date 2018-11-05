@@ -97,6 +97,8 @@ void Scene::Init()
 	m_debugDraw.SetFlags(flags);
 	fSpeedOriginp1 = m_player->GetMoveSpeed();
 	fSpeedOriginp2 = m_player2->GetMoveSpeed();
+
+	m_currentScene = GAME;
 }
 
 void Scene::Update()
@@ -351,6 +353,11 @@ void Scene::Render()
 			ball->Render();
 		}
 	}
+
+	if (GameOver())
+	{
+		m_currentScene = GameState::GAMEOVER;
+	}
 }
 
 void Scene::DeletionCheck()
@@ -423,4 +430,14 @@ void Scene::CreateAnimationEffect(glm::vec2 t_location, float duration, std::str
 	effect->Init(filepath, glm::vec3(t_location.x, t_location.y, 0), 0.0f, glm::vec3(1, 1, 0), m_shader, true, COLLIDER_SQUARE, m_world);
 	effect->duration = duration;
 	m_effects.push_back(effect);
+}
+
+GameState Scene::GetCurrentScene()
+{
+	return m_currentScene;
+}
+
+void Scene::SetCurrentScene(GameState _state)
+{
+	m_currentScene = _state;
 }
