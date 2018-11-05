@@ -14,8 +14,6 @@ public:
 	virtual void Update();
 	virtual void Render();
 
-	bool IsActive();
-
 private:
 	ShaderLoader shaderloader;
 	GLuint shader;
@@ -25,11 +23,10 @@ private:
 	b2World m_world = b2World(b2Vec2(0, 0));
 	b2Body* m_worldbody;
 
+	TextLabel* m_titleText;
 	TextLabel* m_playButtonText;
 	TextLabel* m_howToPlayButtonText;
 	TextLabel* m_exitButtonText;
 
 	int m_iCurrMenuSelection;
-
-	bool m_bIsActive;
 };

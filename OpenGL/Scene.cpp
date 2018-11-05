@@ -288,6 +288,11 @@ void Scene::Update()
 			}
 		}
 	}
+
+	if (GameOver())
+	{
+		m_currentScene = GameState::GAMEOVER;
+	}
 }
 
 void Scene::Render()

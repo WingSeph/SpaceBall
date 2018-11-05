@@ -61,7 +61,7 @@ void Player::Render()
 void Player::MovementChecker()
 {
 	//'w' = Up
-	if (GetButtonDown('w'))
+	if (GetButton('w'))
 	{
 		// Move forwards
 		b2Vec2 direction = b2Vec2(0, 1);
@@ -70,7 +70,7 @@ void Player::MovementChecker()
 		m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 	}
 	// 's' = Down
-	if (GetButtonDown('s'))
+	if (GetButton('s'))
 	{
 		// Move backwards
 		b2Vec2 direction = b2Vec2(0, 1);
@@ -81,7 +81,7 @@ void Player::MovementChecker()
 	}
 
 	// 'a' = Left
-	if (GetButtonDown('a'))
+	if (GetButton('a'))
 	{
 		// Move left
 		b2Vec2 direction = b2Vec2(1, 0);
@@ -91,7 +91,7 @@ void Player::MovementChecker()
 	}
 
 	// 'd' = Right
-	else if (GetButtonDown('d'))
+	else if (GetButton('d'))
 	{
 		// Move right
 		b2Vec2 direction = b2Vec2(1, 0);

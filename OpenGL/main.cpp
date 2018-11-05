@@ -5,34 +5,41 @@
 #include "Menu.h"
 #include "Scene.h"
 #include "GameOver.h"
+#include "HowToPlay.h"
 #include "Input.h"
 #include "Dependencies/Box2D/Box2D.h"
 
-std::unique_ptr<Menu> menu;
-std::unique_ptr<Scene> game;
-std::unique_ptr<GameOver> gameover;
+std::unique_ptr<Menu> menuScene;
+std::unique_ptr<Scene> gameScene;
+std::unique_ptr<HowToPlay> howToPlayScene;
+std::unique_ptr<GameOver> gameoverScene;
 
 GameState g_currentScene = MENU;
+bool g_bIsChangingScene = false;
 
 void Init()
 {
-	gameover = std::make_unique<GameOver>();
+	gameoverScene = std::make_unique<GameOver>();
 	switch (g_currentScene)
 	{
 	case MENU:
-		menu = std::make_unique<Menu>();
-		menu->Init();
+		menuScene = std::make_unique<Menu>();
+		menuScene->Init();
 		break;
 
 	case GAME:
-		game = std::make_unique<Scene>();
-		game->Init();
+		gameScene = std::make_unique<Scene>();
+		gameScene->Init();
 		break;
 
 	case HOWTOPLAY:
+		howToPlayScene = std::make_unique<HowToPlay>();
+		howToPlayScene->Init();
 		break;
 
 	case GAMEOVER:
+		gameoverScene = std::make_unique<GameOver>();
+		gameoverScene->Init(gameScene->WhoWon());
 		break;
 
 	default:
@@ -51,69 +58,83 @@ void Render()
 	switch (g_currentScene)
 	{
 	case MENU:
-		menu->Render();
+		menuScene->Render();
 		break;
 	case GAME:
-		game->Render();
-		g_currentScene = game->GetCurrentScene();
+		gameScene->Render();
 		break;
 	case HOWTOPLAY:
+		howToPlayScene->Render();
 		break;
 	case GAMEOVER:
-		gameover->Render();
+		gameoverScene->Render();
 		break;
 	default:
 		break;
 	}
+
+	switch (g_currentScene)
+	{
+	case MENU:
+		if (g_currentScene != menuScene->GetCurrentScene())
+		{
+			g_currentScene = menuScene->GetCurrentScene();
+			g_bIsChangingScene = true;
+		}
+		break;
+
+	case GAME:
+		if (g_currentScene != gameScene->GetCurrentScene())
+		{
+			g_currentScene = gameScene->GetCurrentScene();
+			g_bIsChangingScene = true;
+		}
+		break;
+
+	case GAMEOVER:
+		if (g_currentScene != gameoverScene->GetCurrentScene())
+		{
+			g_currentScene = gameoverScene->GetCurrentScene();
+			g_bIsChangingScene = true;
+		}
+		break;
+
+	case HOWTOPLAY:
+		if (g_currentScene != howToPlayScene->GetCurrentScene())
+		{
+			g_currentScene = howToPlayScene->GetCurrentScene();
+			g_bIsChangingScene = true;
+		}
+		break;
+	}
+
 	glutSwapBuffers();
 }
 
 void Update()
 {
+	if (g_bIsChangingScene)
+	{
+		Init();
+		g_bIsChangingScene = false;
+	}
+
 	switch (g_currentScene)
 	{
 	case MENU:
-		menu->Update();
-		if (!menu->IsActive())
-		{
-			g_currentScene = GAME;
-			Init();
-		}
+		menuScene->Update();
 		break;
 
 	case GAME:
-		game->Update();
-		if (game->GameOver() == true)
-		{
-			g_currentScene = GAMEOVER;
-			switch (game->WhoWon())
-			{
-			case 1:
-				gameover->Init(1);
-				break;
-
-			case 2:
-				gameover->Init(2);
-				break;
-
-			default:
-				gameover->Init(0);
-				break;
-			}
-		}
-		g_currentScene = game->GetCurrentScene();
+		gameScene->Update();
 		break;
 
 	case HOWTOPLAY:
+		howToPlayScene->Update();
 		break;
 
 	case GAMEOVER:
-		gameover->Update();
-		if (!gameover->IsActive())
-		{
-			g_currentScene = GAME;
-			Init();
-		}
+		gameoverScene->Update();
 		break;
 
 	default:
