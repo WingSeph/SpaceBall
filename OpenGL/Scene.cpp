@@ -170,10 +170,12 @@ void Scene::Update()
 
 	if (m_speedpoweruplifetimep1 <= 0) {
 		m_speedpoweruplifetimep1 = 0;
+		m_player1canspeedup = true;
 		m_player->SetMoveSpeed(fSpeedOriginp1);
 	}
 	if (m_speedpoweruplifetimep2 <= 0) {
 		m_speedpoweruplifetimep2 = 0;
+		m_player2canspeedup = true;
 		m_player->SetMoveSpeed(fSpeedOriginp2);
 	}
 
@@ -232,16 +234,22 @@ void Scene::Update()
 	}
 
 	if (m_powerup->isactive && m_powerup->type == 3) {
-		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody()) && m_player1canspeedup) {
+			m_player1canspeedup = false;
 			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
 			CreateAnimationEffect(m_player->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
 			m_speedpoweruplifetimep1 = 4;
 			m_powerup->isactive = false;
 		}
-		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
+		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody()) && m_player2canspeedup) {
+			m_player2canspeedup = false;
 			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
 			CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
 			m_speedpoweruplifetimep2 = 4;
+			m_powerup->isactive = false;
+		}
+
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody()) && !m_player1canspeedup || m_powerup->CheckCollisionOnplayer(m_player2->GetBody()) && m_player2canspeedup) {
 			m_powerup->isactive = false;
 		}
 	}

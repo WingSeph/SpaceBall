@@ -63,6 +63,8 @@ private:
 	float m_player1respawn = 0;
 	float m_player2respawn = 0;
 	bool m_firstrun = false;
+	bool m_player1canspeedup = true;
+	bool m_player2canspeedup = true;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;
 	float m_speedpoweruplifetimep1 = 0;
