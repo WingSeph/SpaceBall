@@ -27,7 +27,7 @@ void GameOver::Init(int winner)
 	case 1:
 		m_titleText->Update("Player 1 Wins!");
 		m_titleText->SetPosition(WINDOW_WIDTH / 8 - 10, WINDOW_HEIGHT / 2 + 100);
-		m_titleText->SetColor(0, 1, 0);
+		m_titleText->SetColor(0, 0, 1);
 		break;
 
 	case 2:
