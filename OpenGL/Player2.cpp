@@ -4,7 +4,9 @@
 #include "Input.h"
 
 Player2::Player2()
-{}
+{
+	m_fMoveSpeed = 40.0f;
+}
 
 Player2::~Player2()
 {}

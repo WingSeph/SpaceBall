@@ -249,7 +249,7 @@ void Scene::Update()
 			m_powerup->isactive = false;
 		}
 
-		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody()) && !m_player1canspeedup || m_powerup->CheckCollisionOnplayer(m_player2->GetBody()) && m_player2canspeedup) {
+		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody()) && m_player1canspeedup || m_powerup->CheckCollisionOnplayer(m_player2->GetBody()) && m_player2canspeedup) {
 			m_powerup->isactive = false;
 		}
 	}
