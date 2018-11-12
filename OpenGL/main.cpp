@@ -161,6 +161,8 @@ int main(int argc, char** argv)
 	glewInit();
 	Init();
 
+	FreeConsole();
+
 	glutKeyboardFunc(Keyboard_Down);
 	glutKeyboardUpFunc(Keyboard_Up);
 
