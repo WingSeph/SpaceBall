@@ -17,7 +17,7 @@ TextLabel::TextLabel(std::string _sNewText, std::string _sNewFont, glm::vec2 _po
 	m_sText = _sNewText;
 	m_color = _color;
 	m_scale = 1.0;
-	SetPosition(_pos);
+	SetPosition(_pos.x, _pos.y);
 	m_program = shaderLoader.CreateProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs");
 	glm::mat4 proj = glm::ortho(0.0f, (GLfloat)WINDOW_WIDTH, 0.0f, (GLfloat)WINDOW_HEIGHT);
 

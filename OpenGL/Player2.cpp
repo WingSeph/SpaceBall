@@ -4,7 +4,9 @@
 #include "Input.h"
 
 Player2::Player2()
-{}
+{
+	m_fMoveSpeed = 40.0f;
+}
 
 Player2::~Player2()
 {}
@@ -22,6 +24,8 @@ void Player2::Init(std::string t_filepath, glm::vec3 t_position, float t_rotatio
 
 void Player2::Update(float t_deltaTime, glm::mat4 t_view, glm::mat4 t_projection, glm::vec3 t_cameraPos)
 {
+	CInput::Update();
+
 	if (m_physicsBody->GetPosition().y > 15.25f)
 	{
 		m_physicsBody->SetTransform(b2Vec2(m_physicsBody->GetPosition().x, 0), m_physicsBody->GetAngle());
@@ -55,7 +59,7 @@ void Player2::Render()
 void Player2::MovementChecker()
 {
 	//'w' = Up
-	if (GetButtonDown('i'))
+	if (GetButton('i'))
 	{
 		// Move forwards
 		b2Vec2 direction = b2Vec2(0, 1);
@@ -64,7 +68,7 @@ void Player2::MovementChecker()
 		m_physicsBody->ApplyForce(direction, m_physicsBody->GetWorldCenter(), true);
 	}
 	// 's' = Down
-	if (GetButtonDown('k'))
+	if (GetButton('k'))
 	{
 		// Move backwards
 		b2Vec2 direction = b2Vec2(0, 1);
@@ -75,7 +79,7 @@ void Player2::MovementChecker()
 	}
 
 	// 'a' = Left
-	if (GetButtonDown('j'))
+	if (GetButton('j'))
 	{
 		// Move left
 		b2Vec2 direction = b2Vec2(1, 0);
@@ -86,7 +90,7 @@ void Player2::MovementChecker()
 	}
 
 	// 'd' = Right
-	else if (GetButtonDown('l'))
+	else if (GetButton('l'))
 	{
 		// Move right
 		b2Vec2 direction = b2Vec2(1, 0);

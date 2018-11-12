@@ -97,6 +97,8 @@ void Scene::Init()
 	m_debugDraw.SetFlags(flags);
 	fSpeedOriginp1 = m_player->GetMoveSpeed();
 	fSpeedOriginp2 = m_player2->GetMoveSpeed();
+
+	m_currentScene = GAME;
 }
 
 void Scene::Update()
@@ -168,10 +170,12 @@ void Scene::Update()
 
 	if (m_speedpoweruplifetimep1 <= 0) {
 		m_speedpoweruplifetimep1 = 0;
+		m_player1canspeedup = true;
 		m_player->SetMoveSpeed(fSpeedOriginp1);
 	}
 	if (m_speedpoweruplifetimep2 <= 0) {
 		m_speedpoweruplifetimep2 = 0;
+		m_player2canspeedup = true;
 		m_player->SetMoveSpeed(fSpeedOriginp2);
 	}
 
@@ -229,20 +233,26 @@ void Scene::Update()
 		}
 	}
 
-	if (m_powerup->isactive && m_powerup->type == 3) {
-		if (m_powerup->CheckCollisionOnplayer(m_player->GetBody())) {
-			m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
-			CreateAnimationEffect(m_player->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
-			m_speedpoweruplifetimep1 = 4;
-			m_powerup->isactive = false;
-		}
-		else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody())) {
-			m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
-			CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
-			m_speedpoweruplifetimep2 = 4;
-			m_powerup->isactive = false;
-		}
-	}
+	//if (m_powerup->isactive && m_powerup->type == 3) {
+	//	if (m_powerup->CheckCollisionOnplayer(m_player->GetBody()) && m_player1canspeedup) {
+	//		m_player1canspeedup = false;
+	//		m_player->SetMoveSpeed(m_player->GetMoveSpeed() * 2);
+	//		CreateAnimationEffect(m_player->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
+	//		m_speedpoweruplifetimep1 = 4;
+	//		m_powerup->isactive = false;
+	//	}
+	//	else if (m_powerup->CheckCollisionOnplayer(m_player2->GetBody()) && m_player2canspeedup) {
+	//		m_player2canspeedup = false;
+	//		m_player2->SetMoveSpeed(m_player2->GetMoveSpeed() * 2);
+	//		CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 1.5f, "Resources/Textures/powerupYellow_bolt.png");				//effect
+	//		m_speedpoweruplifetimep2 = 4;
+	//		m_powerup->isactive = false;
+	//	}
+
+	//	if (m_powerup->CheckCollisionOnplayer(m_player->GetBody()) && m_player1canspeedup || m_powerup->CheckCollisionOnplayer(m_player2->GetBody()) && m_player2canspeedup) {
+	//		m_powerup->isactive = false;
+	//	}
+	//}
 
 	if (m_ball1->IsDead()) {
 		FMOD::Channel* channel;
@@ -351,6 +361,11 @@ void Scene::Render()
 			ball->Render();
 		}
 	}
+
+	if (GameOver())
+	{
+		m_currentScene = GameState::GAMEOVER;
+	}
 }
 
 void Scene::DeletionCheck()
@@ -361,7 +376,7 @@ void Scene::DeletionCheck()
 		CreateAnimationEffect(m_player->GetBody()->GetPosition(), 0.5f, "Resources/Textures/playerShip1_damage3.png");				//effect
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxThump, 0, false, &channel);
-		m_player1respawn = 5;
+		m_player1respawn = 2;
 	}
 
 	if (m_player != nullptr && m_player2->IsDead() && m_player2respawn <= 0)
@@ -370,7 +385,7 @@ void Scene::DeletionCheck()
 		CreateAnimationEffect(m_player2->GetBody()->GetPosition(), 0.5f, "Resources/Textures/playerShip2_damage3.png");				//effect
 		FMOD::Channel* channel;
 		audioMgr->playSound(fxThump, 0, false, &channel);
-		m_player2respawn = 5;
+		m_player2respawn = 2;
 	}
 }
 
@@ -423,4 +438,14 @@ void Scene::CreateAnimationEffect(glm::vec2 t_location, float duration, std::str
 	effect->Init(filepath, glm::vec3(t_location.x, t_location.y, 0), 0.0f, glm::vec3(1, 1, 0), m_shader, true, COLLIDER_SQUARE, m_world);
 	effect->duration = duration;
 	m_effects.push_back(effect);
+}
+
+GameState Scene::GetCurrentScene()
+{
+	return m_currentScene;
+}
+
+void Scene::SetCurrentScene(GameState _state)
+{
+	m_currentScene = _state;
 }

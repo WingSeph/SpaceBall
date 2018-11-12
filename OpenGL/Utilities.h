@@ -11,7 +11,8 @@ const int WINDOW_HEIGHT = 600;
 enum GameState
 {
 	MENU,
-	SCENE,
+	GAME,
+	HOWTOPLAY,
 	GAMEOVER
 };
 

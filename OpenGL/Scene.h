@@ -33,6 +33,9 @@ public:
 	void CreateAnimationEffect(b2Vec2 t_location, float duration, std::string filepath);
 	void CreateAnimationEffect(glm::vec2 t_location, float duration, std::string filepath);
 
+	GameState GetCurrentScene();
+	void SetCurrentScene(GameState _state);
+
 private:
 	ShaderLoader m_shaderloader;
 	GLuint m_shader;
@@ -60,6 +63,8 @@ private:
 	float m_player1respawn = 0;
 	float m_player2respawn = 0;
 	bool m_firstrun = false;
+	bool m_player1canspeedup = true;
+	bool m_player2canspeedup = true;
 	float m_deltaTime = 0;
 	float m_previousTime = 0;
 	float m_speedpoweruplifetimep1 = 0;
@@ -75,4 +80,6 @@ private:
 	int32 m_velocityInterations = 10;
 	int32 m_positionIterations = 8;
 	b2GLDraw m_debugDraw;
+
+	GameState m_currentScene;
 };

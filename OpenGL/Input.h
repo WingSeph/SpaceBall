@@ -22,9 +22,18 @@ void Keyboard_Up(unsigned char key, int x, int y);
 
 void Mouse(int _iButton, int _iGlutState, int _iX, int _iY);
 
+class CInput
+{
+public:
+	CInput() {}
 
-bool GetButtonDown(unsigned char _cKey);
-bool GetButtonUp(unsigned char _cKey);
+	bool GetButtonDown(unsigned char _cKey);
+	bool GetButtonUp(unsigned char _cKey);
+	bool GetButton(unsigned char _cKey);
 
-bool GetMouseButtonDown(int _iButton);
-bool GetMouseButtonUp(int _iButton);
+	bool GetMouseButtonDown(int _iButton);
+	bool GetMouseButtonUp(int _iButton);
+	bool GetMouseButton(int _iButton);
+
+	void Update();
+};
